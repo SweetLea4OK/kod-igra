@@ -1,0 +1,2646 @@
+<!DOCTYPE html>
+<html lang="ru" data-lang="ru" data-theme="light">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Код-игра — учись программировать играя | бесплатный курс JavaScript</title>
+<meta name="description" id="meta-desc" content="Код-игра — бесплатный интерактивный курс по JavaScript: 16 коротких уровней, настоящий запуск кода прямо в браузере, мгновенная проверка и объяснения. Без регистрации." />
+<meta name="author" content="Код-игра" />
+<meta name="theme-color" content="#faf6ef" id="meta-theme" />
+<link rel="canonical" href="./" />
+<!-- Альтернативные языковые версии. Замените ./ на реальные адреса, когда сайт будет на домене -->
+<link rel="alternate" hreflang="ru" href="./?lang=ru" />
+<link rel="alternate" hreflang="en" href="./?lang=en" />
+<link rel="alternate" hreflang="x-default" href="./" />
+
+<!-- Open Graph / Twitter -->
+<meta property="og:type" content="website" />
+<meta property="og:locale" id="og-locale" content="ru_RU" />
+<meta property="og:locale:alternate" id="og-locale-alt" content="en_US" />
+<meta property="og:site_name" id="og-site" content="Код-игра" />
+<meta property="og:title" id="og-title" content="Код-игра — учись программировать играя" />
+<meta property="og:description" id="og-desc" content="16 коротких уровней, настоящий код в браузере и мгновенная обратная связь. Бесплатно и без регистрации." />
+<meta property="og:image" content="og.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" id="tw-title" content="Код-игра — учись программировать играя" />
+<meta name="twitter:description" id="tw-desc" content="16 коротких уровней, настоящий код в браузере и мгновенная обратная связь." />
+<meta name="twitter:image" content="og.png" />
+
+<!-- Иконки -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%231e1b2e'/%3E%3Cpath d='M25 21 15 32l10 11M39 21l10 11-10 11' fill='none' stroke='%23faf6ef' stroke-width='4.5' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E" />
+<link rel="apple-touch-icon" href="icon-192.png" />
+<link rel="manifest" href="manifest.json" />
+
+<script>
+  // Тема ставится до отрисовки, чтобы не мигало белым
+  (function () {
+    try {
+      var saved = localStorage.getItem('codegame.theme');
+      var dark = saved ? saved === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+      document.documentElement.setAttribute('data-theme', dark ? 'dark' : 'light');
+      var m = document.getElementById('meta-theme');
+      if (m) m.setAttribute('content', dark ? '#14121c' : '#faf6ef');
+    } catch (e) {}
+  })();
+  // Язык определяется до отрисовки: ?lang=en → сохранённый выбор → язык браузера
+  (function () {
+    try {
+      var q = null;
+      try { q = new URLSearchParams(location.search).get('lang'); } catch (e) {}
+      var saved = null;
+      try { saved = localStorage.getItem('codegame.lang'); } catch (e) {}
+      var nav = String(navigator.language || navigator.userLanguage || 'ru').toLowerCase();
+      var pathEn = /\/en(\/|$)/.test(location.pathname || '');
+      var lang = (q === 'ru' || q === 'en') ? q
+        : ((saved === 'ru' || saved === 'en') ? saved
+        : ((pathEn || nav.indexOf('en') === 0) ? 'en' : 'ru'));
+      document.documentElement.setAttribute('lang', lang);
+      document.documentElement.setAttribute('data-lang', lang);
+    } catch (e) {}
+  })();
+</script>
+
+<style>
+
+  :root {
+    --cream: #faf6ef; --paper: #fff;
+    --ink: #1e1b2e; --ink-soft: #4a4560; --muted: #7a7488;
+    --line: #e8e2d3; --line-soft: #f0ebdd;
+    --accent: #5b4ce6; --accent-soft: #ece9ff; --accent-ink: #3b2fc0;
+    --success: #2fb87a; --success-soft: #e4f6ed;
+    --warn: #e5a04b; --warn-soft: #fdf1e0;
+    --danger: #d95757; --danger-soft: #fbeaea;
+    --code-bg: #f7f3e8;
+    --out-bg: #1e1b2e; --out-ink: #d5f2e4;
+    --exp-bg: #f7f5fc; --exp-line: #e6e1f5;
+    --serif: Georgia, "Times New Roman", serif;
+    --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: "SF Mono", ui-monospace, Consolas, "Courier New", monospace;
+    --radius: 16px;
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-t: env(safe-area-inset-top, 0px);
+    color-scheme: light;
+  }
+  html[data-theme="dark"] {
+    --cream: #14121c; --paper: #1d1a28;
+    --ink: #ece9f6; --ink-soft: #c3bdd4; --muted: #968fa8;
+    --line: #332e46; --line-soft: #2a2539;
+    --accent: #8b7dff; --accent-soft: #2a2547; --accent-ink: #c6bdff;
+    --success: #4fd39b; --success-soft: #17362a;
+    --warn: #e9ab5f; --warn-soft: #3a2c17;
+    --danger: #f08a8a; --danger-soft: #3d1f22;
+    --code-bg: #221e30;
+    --out-bg: #0f0d17; --out-ink: #cdeedd;
+    --exp-bg: #201c30; --exp-line: #332e46;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  * { -webkit-tap-highlight-color: rgba(139, 125, 255, 0.18); }
+  [hidden] { display: none !important; }
+  html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+    scroll-padding-top: 84px;
+  }
+  body {
+    margin: 0; font-family: var(--sans); font-size: 16px; line-height: 1.6;
+    color: var(--ink); background: var(--cream);
+    -webkit-font-smoothing: antialiased;
+    min-height: 100dvh; overflow-x: hidden;
+    display: flex; flex-direction: column;
+    transition: background 0.25s, color 0.25s;
+  }
+  .wrap {
+    width: 100%; max-width: 880px; margin: 0 auto;
+    padding-inline: clamp(1rem, 4vw, 2rem);
+  }
+  .screen { padding: clamp(1.5rem, 4vw, 3rem) 0 3rem; flex: 1; }
+
+  /* Доступность */
+  .visually-hidden {
+    position: absolute; width: 1px; height: 1px; margin: -1px;
+    padding: 0; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .skip-link {
+    position: absolute; left: -9999px; top: 0; z-index: 100;
+    background: var(--accent); color: #fff; padding: 0.7rem 1.1rem;
+    border-radius: 0 0 10px 0; text-decoration: none; font-weight: 600;
+  }
+  .skip-link:focus { left: 0; }
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 6px; }
+
+  /* Шапка */
+  .header {
+    border-bottom: 1px solid var(--line-soft);
+    background: var(--cream);
+    background: color-mix(in srgb, var(--cream) 94%, transparent);
+    -webkit-backdrop-filter: saturate(1.4) blur(8px);
+    backdrop-filter: saturate(1.4) blur(8px);
+    position: sticky; top: 0; z-index: 20;
+    padding-top: var(--safe-t);
+  }
+  .header__inner {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 0.75rem; padding: 0.65rem 0; flex-wrap: wrap;
+  }
+  .brand {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    text-decoration: none; color: var(--ink); cursor: pointer;
+    border: 0; background: transparent; padding: 0; font: inherit;
+    min-width: 0; touch-action: manipulation;
+  }
+  .brand__mark {
+    display: inline-grid; place-items: center; width: 30px; height: 30px;
+    border-radius: 8px; background: var(--ink); color: var(--cream);
+    font-family: var(--mono); font-size: 12px; font-weight: 700; flex: 0 0 auto;
+  }
+  .brand__name { font-family: var(--serif); font-weight: 600; font-size: 1.1rem; white-space: nowrap; }
+  .nav { display: flex; gap: 0.4rem; align-items: center; flex-wrap: wrap; }
+
+  .chip {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.78rem; font-weight: 600; padding: 0.25rem 0.6rem;
+    border-radius: 999px; background: var(--accent-soft); color: var(--accent-ink);
+    white-space: nowrap; line-height: 1.4;
+  }
+  .chip--muted { background: transparent; color: var(--muted); border: 1px solid var(--line); font-weight: 500; }
+
+  .icon-btn {
+    width: 40px; height: 40px; display: inline-grid; place-items: center;
+    border-radius: 10px; border: 1px solid var(--line);
+    background: transparent; color: var(--ink-soft); cursor: pointer;
+    font-size: 1rem; line-height: 1; padding: 0;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+    touch-action: manipulation;
+  }
+  .icon-btn:active { background: var(--accent-soft); }
+
+  /* Кнопки */
+  .btn {
+    font-family: var(--sans); font-size: 0.95rem; font-weight: 500;
+    padding: 0.7rem 1.3rem; border-radius: 10px;
+    border: 1px solid transparent; cursor: pointer; text-decoration: none;
+    display: inline-flex; align-items: center; justify-content: center; gap: 0.4rem;
+    transition: background 0.2s, border-color 0.2s, color 0.2s, transform 0.08s;
+    touch-action: manipulation; -webkit-user-select: none; user-select: none;
+  }
+  .btn:active { transform: translateY(1px); }
+  .btn--primary { background: var(--accent); color: #fff; }
+  .btn--ghost { background: transparent; color: var(--ink-soft); border-color: var(--line); }
+  .btn--sm { padding: 0.45rem 0.9rem; font-size: 0.85rem; border-radius: 8px; }
+  .btn[disabled] { opacity: 0.55; cursor: default; transform: none; }
+  @media (hover: hover) {
+    .btn--primary:hover { background: color-mix(in srgb, var(--accent) 82%, #000); }
+    .btn--ghost:hover { border-color: var(--accent); color: var(--accent-ink); }
+    .icon-btn:hover { border-color: var(--accent); color: var(--accent-ink); }
+  }
+
+  /* Типографика */
+  .eyebrow {
+    font-size: 0.76rem; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--muted); margin: 0 0 0.9rem;
+  }
+  .title-xl {
+    font-family: var(--serif); font-weight: 400;
+    font-size: clamp(2rem, 5.5vw, 3.4rem); line-height: 1.05;
+    letter-spacing: -0.01em; margin: 0 0 1.1rem; text-wrap: balance;
+  }
+  .title-xl em { font-style: italic; font-weight: 500; color: var(--accent); }
+  .title-lg {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(1.6rem, 3.8vw, 2.3rem); line-height: 1.12;
+    margin: 0 0 1.2rem; text-wrap: balance;
+  }
+  .title-lg em { font-style: italic; color: var(--accent); }
+  .lead {
+    font-size: clamp(1rem, 1.4vw, 1.1rem);
+    color: var(--ink-soft); max-width: 58ch; margin: 0 0 1.6rem;
+  }
+  .section-sep { border: 0; border-top: 1px solid var(--line-soft); margin: 2.5rem 0 1rem; }
+
+  .hero__actions { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 1.8rem; }
+  .hero__facts {
+    display: flex; flex-wrap: wrap; gap: 0.3rem 1.4rem;
+    list-style: none; margin: 0; padding: 0;
+    font-size: 0.86rem; color: var(--muted);
+  }
+  .hero__facts li { display: inline-flex; align-items: center; gap: 0.5rem; }
+  .hero__facts li::before {
+    content: ""; width: 6px; height: 6px; border-radius: 50%;
+    background: var(--accent); opacity: 0.6; flex: 0 0 auto;
+  }
+  .resume {
+    display: none; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+    margin: 0 0 1.4rem; padding: 0.7rem 0.9rem;
+    border: 1px dashed var(--line); border-radius: 12px;
+    font-size: 0.9rem; color: var(--muted);
+  }
+  .resume.show { display: flex; }
+
+  /* Сетка "что такое программирование" */
+  .what__grid {
+    display: grid; grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(1.5rem, 4vw, 2.8rem); margin-top: 1.5rem;
+  }
+  @media (max-width: 860px) { .what__grid { grid-template-columns: 1fr; } }
+  .prose p { margin: 0 0 1rem; color: var(--ink-soft); }
+  .prose p:last-child { margin-bottom: 0; }
+  .prose code, .task code, .note code {
+    font-family: var(--mono); font-size: 0.88em;
+    background: var(--code-bg); padding: 0.1em 0.4em;
+    border-radius: 4px; color: var(--accent-ink); overflow-wrap: anywhere;
+  }
+  .notes { display: flex; flex-direction: column; gap: 0.7rem; }
+  .note {
+    padding: 1rem 1.15rem; background: var(--paper);
+    border: 1px solid var(--line-soft); border-radius: 12px;
+  }
+  .note__num {
+    font-family: var(--mono); font-size: 0.7rem; letter-spacing: 0.12em;
+    color: var(--accent); text-transform: uppercase;
+  }
+  .note h3 { font-family: var(--serif); font-weight: 500; font-size: 1.05rem; margin: 0.25rem 0 0.3rem; }
+  .note p { margin: 0; font-size: 0.9rem; color: var(--muted); }
+
+  /* Шаги */
+  .steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin: 1.8rem 0; }
+  @media (max-width: 760px) { .steps { grid-template-columns: 1fr; } }
+  .step {
+    padding: 1.2rem 1.3rem 1.3rem; background: var(--paper);
+    border: 1px solid var(--line-soft); border-radius: 12px;
+  }
+  .step__num {
+    font-family: var(--serif); font-size: 1.6rem; line-height: 1;
+    font-weight: 500; color: var(--accent); opacity: 0.85;
+  }
+  .step h3 { font-family: var(--serif); font-weight: 500; font-size: 1.05rem; margin: 0.5rem 0 0.3rem; }
+  .step p { margin: 0; font-size: 0.88rem; color: var(--muted); }
+  .intro-actions { display: flex; flex-wrap: wrap; gap: 0.7rem; }
+
+  /* Прогресс */
+  .progress {
+    margin: 0 0 1.2rem; padding: 1rem 1.15rem;
+    background: var(--paper); border: 1px solid var(--line-soft);
+    border-radius: var(--radius);
+  }
+  .progress__meta {
+    display: flex; justify-content: space-between; align-items: baseline;
+    gap: 0.75rem; font-size: 0.85rem; color: var(--muted);
+    margin-bottom: 0.75rem; flex-wrap: wrap;
+  }
+  #step-label { font-weight: 600; color: var(--ink-soft); }
+  #progress-dots { display: flex; gap: 4px; flex-wrap: wrap; }
+  #progress-dots .dot {
+    flex: 1 1 0; min-width: 7px; height: 8px; border-radius: 999px;
+    border: none; background: var(--line); cursor: pointer; padding: 0;
+    transition: background 0.2s; position: relative; touch-action: manipulation;
+  }
+  #progress-dots .dot::after { content: ""; position: absolute; inset: -13px -1px; }
+  #progress-dots .dot.done { background: var(--success); }
+  #progress-dots .dot.current { background: var(--accent); }
+  #progress-dots .dot:disabled { cursor: not-allowed; opacity: 0.45; }
+
+  /* Карточка уровня */
+  .level {
+    background: var(--paper); border: 1px solid var(--line-soft);
+    border-radius: var(--radius); padding: clamp(1.2rem, 3.5vw, 2rem);
+  }
+  .level__top { display: flex; justify-content: space-between; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-bottom: 0.7rem; }
+  #concept-badge {
+    display: inline-block; font-family: var(--mono);
+    font-size: 0.7rem; font-weight: 600; letter-spacing: 0.08em;
+    text-transform: uppercase; color: var(--accent-ink);
+    background: var(--accent-soft); padding: 0.28rem 0.65rem; border-radius: 999px;
+  }
+  .level__meta { font-size: 0.75rem; color: var(--muted); font-family: var(--mono); }
+  #level-title {
+    font-family: var(--serif); font-weight: 500;
+    font-size: clamp(1.35rem, 3vw, 1.8rem); line-height: 1.15;
+    margin: 0 0 0.6rem;
+  }
+  #level-task { margin: 0 0 1.3rem; color: var(--ink-soft); font-size: 1rem; max-width: 62ch; }
+  #level-task b { color: var(--ink); font-weight: 600; }
+
+  .editor-label {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: var(--mono); font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.5rem;
+  }
+  .editor-label__dot { width: 7px; height: 7px; border-radius: 50%; background: var(--warn); }
+  #code-editor {
+    font-family: var(--mono); font-size: 14px; line-height: 2;
+    background: var(--code-bg); border: 1px solid var(--line);
+    border-radius: 12px; padding: 1rem 1.1rem;
+    white-space: pre-wrap; overflow-x: auto;
+    -webkit-overflow-scrolling: touch; overscroll-behavior-x: contain;
+    color: var(--ink-soft); min-height: 80px; tab-size: 2;
+  }
+  .tok-kw { color: #6b4a9c; font-weight: 600; }
+  .tok-str { color: #3d7d5a; }
+  .tok-num { color: #c47a1a; font-weight: 500; }
+  html[data-theme="dark"] .tok-kw { color: #b9a4ff; }
+  html[data-theme="dark"] .tok-str { color: #7fd6a6; }
+  html[data-theme="dark"] .tok-num { color: #f0b672; }
+
+  #code-editor input.blank {
+    display: inline-block;
+    font-family: var(--mono); font-size: 14px; line-height: inherit;
+    color: var(--accent-ink);
+    background: rgba(91, 76, 230, 0.1);
+    background: color-mix(in srgb, var(--accent) 12%, transparent);
+    border: none; border-bottom: 2px solid var(--warn);
+    border-radius: 3px 3px 0 0; padding: 0 0.3em; margin: 0 2px;
+    min-width: 3ch; text-align: center; outline: none;
+    transition: background 0.2s, border-color 0.2s;
+    scroll-margin-block: 150px;
+  }
+  #code-editor input.blank::placeholder { color: var(--muted); opacity: 0.7; }
+  #code-editor input.blank:focus { background: var(--accent-soft); border-bottom-color: var(--accent); }
+  #code-editor input.blank.correct { color: var(--success); background: var(--success-soft); border-bottom-color: var(--success); }
+  #code-editor input.blank.wrong { color: var(--danger); background: var(--danger-soft); border-bottom-color: var(--danger); }
+  #code-editor input.blank:read-only { cursor: default; }
+
+  /* Быстрые символы */
+  .sym-bar { display: none; flex-wrap: wrap; gap: 0.35rem; margin-top: 0.55rem; align-items: center; }
+  @media (max-width: 700px), (pointer: coarse) { .sym-bar { display: flex; } }
+  .sym-bar__label { font-size: 0.7rem; color: var(--muted); font-family: var(--mono); letter-spacing: 0.08em; text-transform: uppercase; margin-right: 0.2rem; }
+  .sym {
+    min-width: 38px; height: 38px; padding: 0 0.55rem;
+    border-radius: 9px; border: 1px solid var(--line);
+    background: var(--paper); color: var(--ink-soft);
+    font-family: var(--mono); font-size: 15px; cursor: pointer;
+    display: inline-grid; place-items: center; touch-action: manipulation;
+  }
+  .sym:active { background: var(--accent-soft); border-color: var(--accent); }
+
+  .actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-top: 1rem; }
+
+  #hint-box {
+    display: none; margin-top: 0.9rem; padding: 0.85rem 1rem;
+    border-radius: 10px; background: var(--warn-soft); color: var(--ink-soft);
+    font-size: 0.92rem; line-height: 1.55;
+    border: 1px solid color-mix(in srgb, var(--warn) 35%, transparent);
+  }
+  #hint-box.show { display: block; }
+  #hint-box code {
+    font-family: var(--mono); font-size: 0.88em;
+    background: color-mix(in srgb, var(--paper) 70%, transparent);
+    padding: 0.1em 0.35em; border-radius: 4px; color: var(--accent-ink);
+  }
+
+  #output-panel { display: none; margin-top: 1.3rem; }
+  #output-panel.show { display: block; }
+  .output__label {
+    display: inline-flex; align-items: center; gap: 0.45rem;
+    font-family: var(--mono); font-size: 0.7rem;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted); margin-bottom: 0.5rem;
+  }
+  .output__label-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--success); }
+  .output__label-dot.is-error { background: var(--danger); }
+  #output-lines {
+    font-family: var(--mono); font-size: 14px; line-height: 1.85;
+    background: var(--out-bg); color: var(--out-ink);
+    border-radius: 10px; padding: 0.9rem 1.1rem;
+    min-height: 50px; overflow-wrap: anywhere;
+  }
+  .output-line { white-space: pre-wrap; }
+  .output-line--muted { color: #9d97b5; font-style: italic; }
+  #output-lines.is-error { color: #ffc9c9; }
+  #output-lines.is-error .output-line::before { content: "⚠ "; }
+
+  .verdict { margin-top: 0.8rem; font-size: 0.92rem; display: none; }
+  .verdict.show { display: block; }
+  .verdict--ok { color: var(--success); font-weight: 600; }
+  .verdict--bad { color: var(--danger); }
+  .verdict code { font-family: var(--mono); background: var(--code-bg); padding: 0.1em 0.35em; border-radius: 4px; color: var(--accent-ink); }
+
+  #explainer {
+    display: none; margin-top: 1.3rem; padding: 1.1rem 1.2rem;
+    border-radius: 12px; background: var(--exp-bg); border: 1px solid var(--exp-line);
+  }
+  #explainer.show { display: block; }
+  #explainer h3 { font-family: var(--serif); font-weight: 500; font-size: 1.1rem; margin: 0 0 0.4rem; color: var(--accent-ink); }
+  #explainer-body { font-size: 0.94rem; color: var(--ink-soft); }
+  #explainer-body code {
+    font-family: var(--mono); font-size: 0.88em;
+    background: var(--accent-soft); color: var(--accent-ink);
+    padding: 0.1em 0.35em; border-radius: 4px; overflow-wrap: anywhere;
+  }
+
+  .next-wrap { margin-top: 1.3rem; display: flex; justify-content: flex-end; gap: 0.6rem; flex-wrap: wrap; }
+  #next-btn { display: none; }
+  #next-btn.show { display: inline-flex; }
+
+  /* Песочница */
+  .field-label { display: block; font-size: 0.78rem; color: var(--muted); margin: 0 0 0.4rem; font-family: var(--mono); letter-spacing: 0.06em; text-transform: uppercase; }
+  #sandbox-code {
+    width: 100%; min-height: 200px; resize: vertical;
+    font-family: var(--mono); font-size: 14px; line-height: 1.75;
+    background: var(--code-bg); border: 1px solid var(--line);
+    border-radius: 12px; padding: 0.9rem 1rem; color: var(--ink);
+    tab-size: 2;
+  }
+  .examples { display: flex; flex-wrap: wrap; gap: 0.4rem; margin: 0.6rem 0 1rem; }
+  .example {
+    font-family: var(--mono); font-size: 0.78rem; padding: 0.35rem 0.7rem;
+    border-radius: 999px; border: 1px solid var(--line); background: var(--paper);
+    color: var(--ink-soft); cursor: pointer; touch-action: manipulation;
+  }
+
+  /* Финал */
+  .finish { text-align: left; }
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0.7rem; margin: 1.4rem 0; }
+  @media (max-width: 700px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+  .stat {
+    padding: 1rem 0.9rem; background: var(--paper);
+    border: 1px solid var(--line-soft); border-radius: 12px;
+  }
+  .stat__val { font-family: var(--serif); font-size: 1.7rem; line-height: 1.1; color: var(--ink); }
+  .stat__lbl { font-size: 0.76rem; color: var(--muted); margin-top: 0.2rem; }
+
+  /* Подвал */
+  .footer {
+    border-top: 1px solid var(--line-soft);
+    padding: 1.2rem 0 calc(1.6rem + var(--safe-b));
+    background: var(--cream);
+  }
+  .footer__inner {
+    display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap;
+    font-size: 0.8rem; color: var(--muted);
+  }
+  .footer a { color: var(--muted); }
+
+  /* Тост */
+  #toast {
+    position: fixed; left: 50%; bottom: calc(1.2rem + var(--safe-b));
+    transform: translate(-50%, 20px); opacity: 0; pointer-events: none;
+    background: var(--ink); color: var(--cream);
+    padding: 0.7rem 1.1rem; border-radius: 999px;
+    font-size: 0.88rem; z-index: 60; transition: opacity 0.25s, transform 0.25s;
+    max-width: calc(100vw - 2rem); text-align: center;
+  }
+  #toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  /* Плашка ошибки JS */
+  #err {
+    display: none; background: var(--danger-soft); color: var(--danger);
+    padding: 0.9rem 1.2rem; font-family: var(--mono); font-size: 0.85rem;
+    border-bottom: 1px solid color-mix(in srgb, var(--danger) 40%, transparent);
+    white-space: pre-wrap;
+  }
+
+  /* ═══════════ МОБИЛЬНАЯ АДАПТАЦИЯ ═══════════ */
+  @media (max-width: 700px) {
+    .header__inner { flex-wrap: nowrap; gap: 0.4rem; padding: 0.5rem 0; }
+    .nav { flex-wrap: nowrap; gap: 0.3rem; }
+    .brand__name { font-size: 1rem; }
+    .btn { min-height: 44px; padding: 0.65rem 1rem; }
+    .btn--sm { min-height: 38px; padding: 0.35rem 0.65rem; font-size: 0.82rem; }
+    .icon-btn { width: 38px; height: 38px; }
+
+    .screen { padding-top: 1.25rem; padding-bottom: calc(2.25rem + var(--safe-b)); }
+    .title-xl { font-size: clamp(1.85rem, 9vw, 2.6rem); line-height: 1.08; }
+    .title-lg { font-size: clamp(1.45rem, 6.6vw, 2rem); }
+    .lead { font-size: 1rem; margin-bottom: 1.35rem; }
+    .eyebrow { font-size: 0.7rem; letter-spacing: 0.14em; }
+
+    .hero__actions .btn { width: 100%; }
+    .hero__facts { flex-direction: column; gap: 0.45rem; font-size: 0.9rem; }
+    .what__grid { margin-top: 1rem; gap: 1.2rem; }
+    .note { padding: 0.9rem 1rem; }
+    .steps { margin: 1.2rem 0; gap: 0.7rem; }
+    .step { padding: 1rem 1.1rem 1.1rem; }
+    .intro-actions .btn { width: 100%; }
+
+    .progress { padding: 0.8rem 0.9rem; margin-bottom: 1rem; border-radius: 14px; }
+    .progress__meta { font-size: 0.8rem; margin-bottom: 0.65rem; }
+    #progress-dots { gap: 3px; }
+
+    .level { padding: 1.1rem 1rem 1.2rem; border-radius: 14px; }
+    #level-title { font-size: 1.35rem; }
+    #level-task { font-size: 0.95rem; margin-bottom: 1.1rem; }
+    #concept-badge { font-size: 0.66rem; }
+
+    /* 16px — иначе iOS зумит страницу при фокусе */
+    #code-editor { font-size: 16px; line-height: 1.9; padding: 0.85rem 0.8rem; min-height: 72px; border-radius: 10px; }
+    #code-editor input.blank { font-size: 16px; margin: 0 1px; }
+    #sandbox-code { font-size: 16px; min-height: 170px; }
+
+    .sym-bar { gap: 0.3rem; margin-top: 0.5rem; display: flex; }
+    .sym { min-width: 36px; height: 40px; font-size: 16px; }
+    .sym-bar__label { width: 100%; margin-bottom: 0.15rem; }
+
+    .actions { flex-direction: column; align-items: stretch; gap: 0.5rem; margin-top: 0.9rem; }
+    .actions .btn { width: 100%; }
+    #hint-box { font-size: 0.9rem; padding: 0.8rem 0.9rem; }
+    #output-lines { font-size: 14px; padding: 0.8rem 0.95rem; }
+    #explainer { padding: 0.95rem 1rem; }
+    #explainer-body { font-size: 0.92rem; }
+
+    .next-wrap { justify-content: stretch; margin-top: 1.1rem; }
+    #next-btn { width: 100%; }
+    .next-wrap {
+      position: sticky; bottom: calc(0.6rem + var(--safe-b));
+      z-index: 5; padding-bottom: 0.2rem;
+    }
+    #next-btn.show { box-shadow: 0 6px 20px rgba(0, 0, 0, 0.22); }
+    .footer__inner { flex-direction: column; gap: 0.35rem; font-size: 0.82rem; }
+  }
+
+  @media (max-width: 420px) {
+    .brand__name { display: none; }
+    .chip { font-size: 0.72rem; padding: 0.2rem 0.45rem; }
+    .icon-btn { width: 36px; height: 36px; }
+    .btn--sm { font-size: 0.78rem; padding: 0.35rem 0.55rem; }
+    #step-label, #progress-count { font-size: 0.76rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after { transition: none !important; animation: none !important; }
+  }
+  @media print {
+    .header, .footer, .sym-bar, .actions, #next-btn, #toast { display: none !important; }
+    body { background: #fff; color: #000; }
+  }
+
+  /* ── Переключатель языка ── */
+  .lang {
+    display: inline-flex; align-items: center; gap: 2px;
+    height: 40px; padding: 2px;
+    border: 1px solid var(--line); border-radius: 10px;
+  }
+  .lang__btn {
+    font-family: var(--sans); font-size: 0.74rem; font-weight: 700;
+    letter-spacing: 0.04em; text-transform: uppercase;
+    min-width: 32px; height: 100%; padding: 0 0.4rem;
+    border: 0; border-radius: 7px; background: transparent;
+    color: var(--muted); cursor: pointer; touch-action: manipulation;
+    transition: background 0.2s, color 0.2s;
+  }
+  .lang__btn[aria-pressed="true"] { background: var(--accent); color: #fff; }
+  @media (hover: hover) {
+    .lang__btn[aria-pressed="false"]:hover { background: var(--accent-soft); color: var(--accent-ink); }
+  }
+  .nav { margin-left: auto; }
+  @media (max-width: 430px) {
+    .header__inner { gap: 0.5rem; }
+    .brand__name { font-size: 0.98rem; }
+    .icon-btn { width: 36px; height: 36px; }
+    .lang { height: 36px; }
+    .lang__btn { min-width: 27px; padding: 0 0.3rem; font-size: 0.7rem; }
+    .btn--sm { padding: 0.4rem 0.65rem; font-size: 0.8rem; }
+    .nav { gap: 0.3rem; }
+  }
+  /* На очень узких экранах убираем счётчик серии, чтобы шапка осталась в одну строку */
+  @media (max-width: 400px) {
+    #streak-chip { display: none; }
+    .brand__name { font-size: 0.94rem; }
+  }
+  /* Английские строки длиннее — даём кнопкам переноситься аккуратно */
+  .btn { max-width: 100%; }
+  .intro-actions .btn { white-space: normal; }
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main" data-i18n="skipLink">Перейти к содержимому</a>
+<div id="err" role="alert"></div>
+<script>
+  window.addEventListener("error", function (e) {
+    var el = document.getElementById("err");
+    if (el && !el.textContent) {
+      var en = document.documentElement.getAttribute("lang") === "en";
+      el.style.display = "block";
+      el.textContent = (en ? "Something went wrong: " : "Что-то пошло не так: ") +
+        (e && e.message ? e.message : (en ? "unknown error" : "неизвестная ошибка"));
+    }
+  });
+</script>
+
+<!-- ═══ Шапка ═══ -->
+<header class="header">
+  <div class="wrap header__inner">
+    <button class="brand" type="button" id="brand-btn" aria-label="Код-игра — на главную" data-i18n-aria="brandAria">
+      <span class="brand__mark" aria-hidden="true">&lt;/&gt;</span>
+      <span class="brand__name" data-i18n="brandName">Код-игра</span>
+    </button>
+    <div class="nav">
+      <span class="chip" id="streak-chip" title="Дней подряд" data-i18n-title="streakTitle">🔥 <b id="streak-val">1</b></span>
+      <div class="lang" id="lang-switch" role="group" aria-label="Язык сайта" data-i18n-aria="langGroupAria">
+        <button class="lang__btn" type="button" data-lang="ru" aria-pressed="true" lang="ru">RU</button>
+        <button class="lang__btn" type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+      </div>
+      <button class="icon-btn" type="button" id="theme-btn" aria-label="Переключить тему" title="Светлая или тёмная тема" data-i18n-aria="themeAria" data-i18n-title="themeTitle">☾</button>
+      <button class="icon-btn" type="button" id="reset-btn" aria-label="Сбросить прогресс" title="Сбросить прогресс" data-i18n-aria="resetAria" data-i18n-title="resetAria" hidden>↺</button>
+      <button class="btn btn--primary btn--sm" type="button" id="play-btn" data-i18n="playBtn">Играть →</button>
+    </div>
+  </div>
+</header>
+
+<main id="main" tabindex="-1">
+
+<!-- ═══ ЭКРАН 1: ГЛАВНАЯ ═══ -->
+<section class="screen" id="screen-home">
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="homeEyebrow">Добро пожаловать · бесплатный курс для новичков</p>
+    <h1 class="title-xl" id="home-title" tabindex="-1" data-i18n="homeTitle">Учиться программировать<br />можно <em>играя</em></h1>
+    <p class="lead" data-i18n="homeLead">
+      Шестнадцать коротких уровней, настоящий код прямо в браузере и мгновенная
+      обратная связь. Без установок, регистраций и «сначала выучите теорию» —
+      просто попробуй.
+    </p>
+
+    <div class="resume" id="resume-bar">
+      <span id="resume-text">Ты остановился на уровне 1</span>
+      <button class="btn btn--primary btn--sm" type="button" id="resume-btn">Продолжить →</button>
+    </div>
+
+    <div class="hero__actions">
+      <button class="btn btn--primary" type="button" id="start-btn" data-i18n="startBtn">Начать игру →</button>
+      <button class="btn btn--ghost" type="button" id="sandbox-btn" data-i18n="sandboxBtn">Песочница</button>
+    </div>
+    <ul class="hero__facts">
+      <li data-i18n="fact1">16 коротких уровней</li>
+      <li data-i18n="fact2">≈ 25 минут</li>
+      <li data-i18n="fact3">бесплатно, без регистрации</li>
+    </ul>
+
+    <hr class="section-sep">
+
+    <p class="eyebrow" data-i18n="partOne">Раздел первый</p>
+    <h2 class="title-lg" data-i18n="whatTitle">Что такое <em>программирование</em></h2>
+
+    <div class="what__grid">
+      <div class="prose">
+        <p data-i18n="prose1">
+          Программа — это список инструкций, которые компьютер выполняет
+          строго по порядку. Как рецепт: взять два яйца, разбить, взбить.
+          Только вместо яиц — числа, слова и команды, а вместо кухни — экран.
+        </p>
+        <p data-i18n="prose2">
+          Компьютер не додумывает и не догадывается. Если написано
+          «напечатай Привет», а кавычек нет — он выдаст ошибку, а не
+          догадается, что ты имел в виду. Поэтому в программировании так
+          важна точность: каждая кавычка и каждая точка имеют значение.
+        </p>
+        <p data-i18n="prose3">
+          Хорошая новость: язык программирования устроен проще, чем кажется.
+          В нём всего несколько десятков команд, а всё остальное — умение их
+          сочетать. Этому и учит игра: шаг за шагом, от первой строчки
+          <code>console.log</code> до собственной функции.
+        </p>
+        <p data-i18n="prose4">
+          А ещё здесь всё по-настоящему: код не «проверяется по шаблону»,
+          а <b>запускается</b> в изолированной песочнице браузера. Напиши
+          другой рабочий вариант — он тоже засчитается.
+        </p>
+      </div>
+
+      <div class="notes">
+        <div class="note">
+          <span class="note__num">01</span>
+          <h3 data-i18n="note1Title">Команды</h3>
+          <p data-i18n="note1Text">console.log, if, for — небольшие кирпичики. Из них строят всё: от калькулятора до космических аппаратов.</p>
+        </div>
+        <div class="note">
+          <span class="note__num">02</span>
+          <h3 data-i18n="note2Title">Порядок</h3>
+          <p data-i18n="note2Text">Компьютер читает код сверху вниз, одну команду за другой. Поменяй порядок — изменится результат.</p>
+        </div>
+        <div class="note">
+          <span class="note__num">03</span>
+          <h3 data-i18n="note3Title">Ошибки — это нормально</h3>
+          <p data-i18n="note3Text">Каждая ошибка — подсказка, где ты ещё не разобрался. Их не боятся, их читают.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ЭКРАН 2: КАК УСТРОЕНА ИГРА ═══ -->
+<section class="screen" id="screen-intro" hidden>
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="introEyebrow">Прежде чем начать</p>
+    <h2 class="title-lg" id="intro-title" tabindex="-1" data-i18n="introTitle">Как устроена <em>игра</em></h2>
+    <p class="lead" data-i18n="introLead">
+      Шестнадцать коротких уровней: от первой строчки кода до циклов, массивов
+      и собственной функции. На каждом шаге — небольшое задание с пропусками,
+      настоящий запуск кода и объяснение, почему это сработало.
+    </p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step__num">1</div>
+        <h3 data-i18n="step1Title">Читаешь задание</h3>
+        <p data-i18n="step1Text">Короткое объяснение: что нужно сделать и зачем.</p>
+      </div>
+      <div class="step">
+        <div class="step__num">2</div>
+        <h3 data-i18n="step2Title">Дописываешь код</h3>
+        <p data-i18n="step2Text">В шаблоне есть пропуски — впиши недостающее и нажми «Проверить».</p>
+      </div>
+      <div class="step">
+        <div class="step__num">3</div>
+        <h3 data-i18n="step3Title">Получаешь ответ</h3>
+        <p data-i18n="step3Text">Код реально выполняется: видно, что вывела программа, и почему.</p>
+      </div>
+    </div>
+
+    <div class="intro-actions">
+      <button class="btn btn--primary" type="button" id="intro-start-btn" data-i18n="introStart">Начать обучение →</button>
+      <button class="btn btn--ghost" type="button" id="intro-sandbox-btn" data-i18n="introSandbox">Сначала песочница</button>
+      <button class="btn btn--ghost" type="button" id="intro-home-btn" data-i18n="backHome">← На главную</button>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ЭКРАН 3: ИГРА ═══ -->
+<section class="screen" id="screen-play" hidden>
+  <div class="wrap">
+    <div class="progress">
+      <div class="progress__meta">
+        <span id="step-label">Уровень 1 из 16</span>
+        <span id="progress-count">0 / 16 · 0 XP</span>
+      </div>
+      <div id="progress-dots"></div>
+    </div>
+
+    <div class="level">
+      <div class="level__top">
+        <span id="concept-badge">Вывод</span>
+        <span class="level__meta" id="attempt-note"></span>
+      </div>
+      <h2 id="level-title" tabindex="-1">Первый контакт</h2>
+      <p id="level-task" class="task"></p>
+
+      <div class="editor-label">
+        <span class="editor-label__dot"></span>
+        <span data-i18n="yourCode">твой код</span>
+      </div>
+
+      <div id="code-editor" aria-label="Редактор кода с пропусками" data-i18n-aria="editorAria"></div>
+
+      <div class="sym-bar" id="sym-bar" aria-label="Быстрые символы" data-i18n-aria="symBarAria">
+        <span class="sym-bar__label" data-i18n="symBarLabel">символы</span>
+        <button class="sym" type="button" data-sym='"' aria-label="Двойная кавычка" data-i18n-aria="dqAria">"</button>
+        <button class="sym" type="button" data-sym="'" aria-label="Одинарная кавычка" data-i18n-aria="sqAria">'</button>
+        <button class="sym" type="button" data-sym="(">(</button>
+        <button class="sym" type="button" data-sym=")">)</button>
+        <button class="sym" type="button" data-sym="[">[</button>
+        <button class="sym" type="button" data-sym="]">]</button>
+        <button class="sym" type="button" data-sym="{">{</button>
+        <button class="sym" type="button" data-sym="}">}</button>
+        <button class="sym" type="button" data-sym="+">+</button>
+        <button class="sym" type="button" data-sym="*">*</button>
+        <button class="sym" type="button" data-sym="=">=</button>
+        <button class="sym" type="button" data-sym=".">.</button>
+        <button class="sym" type="button" data-sym=";">;</button>
+      </div>
+
+      <div class="actions">
+        <button class="btn btn--primary" type="button" id="check-btn" data-i18n="checkBtn">Проверить</button>
+        <button class="btn btn--ghost" type="button" id="hint-btn" data-i18n="hintBtn">Подсказка</button>
+        <button class="btn btn--ghost" type="button" id="solution-btn" data-i18n="solutionBtn" hidden>Показать решение</button>
+      </div>
+
+      <div id="hint-box" role="status"></div>
+
+      <div id="output-panel">
+        <div class="output__label">
+          <span class="output__label-dot" id="output-dot"></span>
+          <span id="output-caption" data-i18n="outputCaption">вывод программы</span>
+        </div>
+        <div id="output-lines" aria-live="polite"></div>
+        <div class="verdict" id="verdict" role="status"></div>
+      </div>
+
+      <div id="explainer">
+        <h3 data-i18n="explainerTitle">Что произошло</h3>
+        <div id="explainer-body"></div>
+      </div>
+
+      <div class="next-wrap">
+        <button class="btn btn--primary" type="button" id="next-btn" data-i18n="nextBtn">Следующий уровень →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ЭКРАН 4: ПЕСОЧНИЦА ═══ -->
+<section class="screen" id="screen-sandbox" hidden>
+  <div class="wrap">
+    <p class="eyebrow" data-i18n="sandboxEyebrow">Свободный режим</p>
+    <h2 class="title-lg" id="sandbox-title" tabindex="-1" data-i18n="sandboxTitle">Песочница</h2>
+    <p class="lead" data-i18n="sandboxLead">
+      Пиши что угодно и запускай. Код выполняется в изолированном воркере:
+      он не видит страницу, а бесконечный цикл обрывается через 1,5 секунды.
+    </p>
+
+    <label class="field-label" for="sandbox-code" data-i18n="yourCode">твой код</label>
+    <textarea id="sandbox-code" spellcheck="false" autocapitalize="off" autocomplete="off">let sum = 0
+for (let i = 1; i <= 5; i++) {
+  sum = sum + i
+}
+console.log("Сумма:", sum)</textarea>
+
+    <div class="examples">
+      <button class="example" type="button" data-example="hello" data-i18n="exHelloBtn">Привет, мир</button>
+      <button class="example" type="button" data-example="table" data-i18n="exTableBtn">Таблица умножения</button>
+      <button class="example" type="button" data-example="array" data-i18n="exArrayBtn">Массив и методы</button>
+      <button class="example" type="button" data-example="object" data-i18n="exObjectBtn">Объект</button>
+    </div>
+
+    <div class="actions">
+      <button class="btn btn--primary" type="button" id="run-sandbox-btn" data-i18n="runBtn">Запустить ▶</button>
+      <button class="btn btn--ghost" type="button" id="clear-sandbox-btn" data-i18n="clearBtn">Очистить</button>
+      <button class="btn btn--ghost" type="button" id="sandbox-home-btn" data-i18n="backHome">← На главную</button>
+    </div>
+
+    <div id="sandbox-output-panel" style="display:none">
+      <div class="output__label">
+        <span class="output__label-dot" id="sandbox-dot"></span>
+        <span data-i18n="outputCaption">вывод программы</span>
+      </div>
+      <div id="sandbox-output" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ЭКРАН 5: ФИНАЛ ═══ -->
+<section class="screen" id="screen-finish" hidden>
+  <div class="wrap finish">
+    <p class="eyebrow" data-i18n="finishEyebrow">Курс пройден</p>
+    <h2 class="title-lg" id="finish-title" tabindex="-1" data-i18n="finishTitle">Ты прошёл всю <em>игру</em></h2>
+    <p class="lead" id="finish-lead" data-i18n="finishLead">
+      Шестнадцать уровней позади: вывод, числа, переменные, строки, условия,
+      циклы, функции, массивы и объекты. Это фундамент, на котором стоит весь
+      JavaScript.
+    </p>
+
+    <div class="stats" id="finish-stats">
+      <div class="stat"><div class="stat__val" id="stat-time">—</div><div class="stat__lbl" data-i18n="statTime">время</div></div>
+      <div class="stat"><div class="stat__val" id="stat-xp">0</div><div class="stat__lbl">XP</div></div>
+      <div class="stat"><div class="stat__val" id="stat-hints">0</div><div class="stat__lbl" data-i18n="statHints">подсказок</div></div>
+      <div class="stat"><div class="stat__val" id="stat-accuracy">—</div><div class="stat__lbl" data-i18n="statAccuracy">с первой попытки</div></div>
+    </div>
+
+    <div class="intro-actions">
+      <button class="btn btn--primary" type="button" id="share-btn" data-i18n="shareBtn">Поделиться результатом</button>
+      <button class="btn btn--ghost" type="button" id="finish-sandbox-btn" data-i18n="toSandbox">В песочницу</button>
+      <button class="btn btn--ghost" type="button" id="finish-again-btn" data-i18n="againBtn">Пройти заново</button>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <span data-i18n="footerLeft">Код-игра · небольшой курс из шестнадцати шагов</span>
+    <span data-i18n="footerRight">Прогресс сохраняется в браузере · <a href="#" id="privacy-link">что это значит</a></span>
+  </div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ══════════════════ ПЕРЕВОДЫ ══════════════════
+   Все строки интерфейса собраны здесь. Добавить язык = добавить объект I18N.xx
+   с тем же набором ключей и массив уровней в LEVELS_BY_LANG. */
+var META = {
+  ru: {
+    lang: "ru",
+    title: "Код-игра — учись программировать играя | бесплатный курс JavaScript",
+    desc: "Код-игра — бесплатный интерактивный курс по JavaScript: 16 коротких уровней, настоящий запуск кода прямо в браузере, мгновенная проверка и объяснения. Без регистрации.",
+    ogTitle: "Код-игра — учись программировать играя",
+    ogDesc: "16 коротких уровней, настоящий код в браузере и мгновенная обратная связь. Бесплатно и без регистрации.",
+    site: "Код-игра",
+    locale: "ru_RU"
+  },
+  en: {
+    lang: "en",
+    title: "Code Game — learn to code by playing | free JavaScript course",
+    desc: "Code Game is a free interactive JavaScript course: 16 short levels, real code running right in your browser, instant checks and explanations. No sign-up.",
+    ogTitle: "Code Game — learn to code by playing",
+    ogDesc: "16 short levels, real code in your browser and instant feedback. Free, no sign-up.",
+    site: "Code Game",
+    locale: "en_US"
+  }
+};
+
+var I18N = {
+  ru: {
+    /* ── статическая разметка ── */
+    skipLink: "Перейти к содержимому",
+    brandAria: "Код-игра — на главную",
+    brandName: "Код-игра",
+    streakTitle: "Дней подряд",
+    langGroupAria: "Язык сайта",
+    themeAria: "Переключить тему",
+    themeTitle: "Светлая или тёмная тема",
+    resetAria: "Сбросить прогресс",
+    playBtn: "Играть →",
+
+    homeEyebrow: "Добро пожаловать · бесплатный курс для новичков",
+    homeTitle: "Учиться программировать<br />можно <em>играя</em>",
+    homeLead: "Шестнадцать коротких уровней, настоящий код прямо в браузере и мгновенная обратная связь. Без установок, регистраций и «сначала выучите теорию» — просто попробуй.",
+    startBtn: "Начать игру →",
+    sandboxBtn: "Песочница",
+    fact1: "16 коротких уровней",
+    fact2: "≈ 25 минут",
+    fact3: "бесплатно, без регистрации",
+    partOne: "Раздел первый",
+    whatTitle: "Что такое <em>программирование</em>",
+    prose1: "Программа — это список инструкций, которые компьютер выполняет строго по порядку. Как рецепт: взять два яйца, разбить, взбить. Только вместо яиц — числа, слова и команды, а вместо кухни — экран.",
+    prose2: "Компьютер не додумывает и не догадывается. Если написано «напечатай Привет», а кавычек нет — он выдаст ошибку, а не догадается, что ты имел в виду. Поэтому в программировании так важна точность: каждая кавычка и каждая точка имеют значение.",
+    prose3: "Хорошая новость: язык программирования устроен проще, чем кажется. В нём всего несколько десятков команд, а всё остальное — умение их сочетать. Этому и учит игра: шаг за шагом, от первой строчки <code>console.log</code> до собственной функции.",
+    prose4: "А ещё здесь всё по-настоящему: код не «проверяется по шаблону», а <b>запускается</b> в изолированной песочнице браузера. Напиши другой рабочий вариант — он тоже засчитается.",
+    note1Title: "Команды",
+    note1Text: "console.log, if, for — небольшие кирпичики. Из них строят всё: от калькулятора до космических аппаратов.",
+    note2Title: "Порядок",
+    note2Text: "Компьютер читает код сверху вниз, одну команду за другой. Поменяй порядок — изменится результат.",
+    note3Title: "Ошибки — это нормально",
+    note3Text: "Каждая ошибка — подсказка, где ты ещё не разобрался. Их не боятся, их читают.",
+
+    introEyebrow: "Прежде чем начать",
+    introTitle: "Как устроена <em>игра</em>",
+    introLead: "Шестнадцать коротких уровней: от первой строчки кода до циклов, массивов и собственной функции. На каждом шаге — небольшое задание с пропусками, настоящий запуск кода и объяснение, почему это сработало.",
+    step1Title: "Читаешь задание",
+    step1Text: "Короткое объяснение: что нужно сделать и зачем.",
+    step2Title: "Дописываешь код",
+    step2Text: "В шаблоне есть пропуски — впиши недостающее и нажми «Проверить».",
+    step3Title: "Получаешь ответ",
+    step3Text: "Код реально выполняется: видно, что вывела программа, и почему.",
+    introStart: "Начать обучение →",
+    introSandbox: "Сначала песочница",
+    backHome: "← На главную",
+
+    yourCode: "твой код",
+    editorAria: "Редактор кода с пропусками",
+    symBarAria: "Быстрые символы",
+    symBarLabel: "символы",
+    dqAria: "Двойная кавычка",
+    sqAria: "Одинарная кавычка",
+    checkBtn: "Проверить",
+    hintBtn: "Подсказка",
+    solutionBtn: "Показать решение",
+    explainerTitle: "Что произошло",
+    nextBtn: "Следующий уровень →",
+    outputCaption: "вывод программы",
+
+    sandboxEyebrow: "Свободный режим",
+    sandboxTitle: "Песочница",
+    sandboxLead: "Пиши что угодно и запускай. Код выполняется в изолированном воркере: он не видит страницу, а бесконечный цикл обрывается через 1,5 секунды.",
+    exHelloBtn: "Привет, мир",
+    exTableBtn: "Таблица умножения",
+    exArrayBtn: "Массив и методы",
+    exObjectBtn: "Объект",
+    runBtn: "Запустить ▶",
+    clearBtn: "Очистить",
+
+    finishEyebrow: "Курс пройден",
+    finishTitle: "Ты прошёл всю <em>игру</em>",
+    finishLead: "Шестнадцать уровней позади: вывод, числа, переменные, строки, условия, циклы, функции, массивы и объекты. Это фундамент, на котором стоит весь JavaScript.",
+    statTime: "время",
+    statHints: "подсказок",
+    statAccuracy: "с первой попытки",
+    shareBtn: "Поделиться результатом",
+    toSandbox: "В песочницу",
+    againBtn: "Пройти заново",
+
+    footerLeft: "Код-игра · небольшой курс из шестнадцати шагов",
+    footerRight: 'Прогресс сохраняется в браузере · <a href="#" id="privacy-link">что это значит</a>',
+
+    /* ── строки из скриптов ── */
+    stepLabel: "Уровень {n} из {total}",
+    levelAria: "Уровень {n}: {title}",
+    progressCount: "{done} / {total} · {xp} XP",
+    resumeDone: "Курс пройден · {xp} XP",
+    resumeResults: "Итоги →",
+    resumeAt: "Ты остановился на уровне {n} · «{title}»",
+    resumeContinue: "Продолжить →",
+    running: "Выполняю…",
+    solutionShown: "решение показано",
+    failedAttempts: "неудачных попыток: {n}",
+    alreadyDone: "Уже пройдено ✓",
+    levelDone: "Уровень пройден ✓",
+    toResults: "К итогам →",
+    nextLevel: "Следующий уровень →",
+    emptyOutput: "программа ничего не вывела",
+    truncated: "…вывод обрезан",
+    interrupted: "— выполнение прервано —",
+    unknownError: "неизвестная ошибка",
+    runtimeError: "ошибка выполнения",
+    fillAll: "Заполни все пропуски — без них код не выполнится.",
+    revealVerdict: "Решение показано — уровень засчитан без XP. Разберись, почему так, и двигайся дальше.",
+    correctBonus: "Верно! +{gain} XP · бонус за чистую попытку",
+    correctGain: "Верно! +{gain} XP",
+    correct: "Верно!",
+    doneBtn: "Готово ✓",
+    timeoutMsg: "Код выполнялся дольше 1,5 секунды. Похоже, цикл никогда не заканчивается — проверь условие остановки.",
+    runFail: "Код не выполнился: <code>{err}</code>",
+    wrongOutput: "Код сработал, но вывел не то, что нужно. Сравни вывод с заданием.",
+    hintTitle: "<strong>Подсказка.</strong>",
+    hintBlank: "Пропуск {n}: {hint}",
+    blankAria: "Пропуск {n}",
+    blankAriaPh: "Пропуск {n}, например {ph}",
+    shareText: "Прошёл «Код-игру»: {total} уровней, {xp} XP за {time}. Попробуй и ты!",
+    shareTitle: "Код-игра",
+    copied: "Результат скопирован в буфер",
+    writeFirst: "Сначала напиши код",
+    executing: "выполняю…",
+    resetConfirm: "Сбросить прогресс и начать с первого уровня? XP и статистика тоже обнулятся.",
+    resetDone: "Прогресс сброшен",
+    privacyToast: "Прогресс хранится только в этом браузере (localStorage). Аккаунтов и серверов нет — данные никуда не отправляются.",
+    workerFail: "Не удалось выполнить код. Проверь синтаксис.",
+    timeoutError: "Дольше 1,5 секунды — похоже на бесконечный цикл.",
+    secUnit: "{n} с",
+    minUnit: "{n} мин",
+    hourUnit: "{h} ч {m} мин",
+    themeToLight: "Включить светлую тему",
+    themeToDark: "Включить тёмную тему",
+    langSwitched: "Язык: русский",
+
+    sandboxDefault: 'let sum = 0\nfor (let i = 1; i <= 5; i++) {\n  sum = sum + i\n}\nconsole.log("Сумма:", sum)',
+    exHello: 'console.log("Привет, мир!")',
+    exTable: 'for (let i = 1; i <= 5; i++) {\n  let row = ""\n  for (let j = 1; j <= 5; j++) {\n    row = row + (i * j) + "\\t"\n  }\n  console.log(row)\n}',
+    exArray: 'let fruits = ["яблоко", "банан", "вишня"]\nfruits.push("груша")\nconsole.log("Всего:", fruits.length)\nfor (let f of fruits) {\n  console.log("- " + f)\n}',
+    exObject: 'let user = { name: "Аня", age: 20 }\nconsole.log(user.name, "—", user.age, "лет")'
+  },
+
+  en: {
+    skipLink: "Skip to content",
+    brandAria: "Code Game — back to the home page",
+    brandName: "Code Game",
+    streakTitle: "Days in a row",
+    langGroupAria: "Site language",
+    themeAria: "Switch theme",
+    themeTitle: "Light or dark theme",
+    resetAria: "Reset progress",
+    playBtn: "Play →",
+
+    homeEyebrow: "Welcome · a free course for beginners",
+    homeTitle: "Learn to code<br />by <em>playing</em>",
+    homeLead: "Sixteen short levels, real code right in your browser and instant feedback. No installs, no sign-ups, no “learn the theory first” — just try it.",
+    startBtn: "Start playing →",
+    sandboxBtn: "Sandbox",
+    fact1: "16 short levels",
+    fact2: "≈ 25 minutes",
+    fact3: "free, no sign-up",
+    partOne: "Part one",
+    whatTitle: "What <em>programming</em> is",
+    prose1: "A program is a list of instructions the computer carries out strictly in order. Like a recipe: take two eggs, crack them, whisk. Only instead of eggs there are numbers, words and commands — and instead of a kitchen, the screen.",
+    prose2: "The computer doesn’t guess. If you write “print Hello” without quotes, you get an error instead of it working out what you meant. That’s why precision matters in programming: every quote and every dot counts.",
+    prose3: "The good news: a programming language is simpler than it looks. It has just a few dozen commands, and everything else is the skill of combining them. That’s what the game teaches — step by step, from your first <code>console.log</code> to your own function.",
+    prose4: "And everything here is real: your code isn’t “checked against a pattern”, it is <b>actually run</b> in an isolated browser sandbox. Write a different working solution — it counts too.",
+    note1Title: "Commands",
+    note1Text: "console.log, if, for — small building blocks. Everything is built from them, from a calculator to a spacecraft.",
+    note2Title: "Order",
+    note2Text: "The computer reads code from top to bottom, one command at a time. Change the order and the result changes.",
+    note3Title: "Mistakes are normal",
+    note3Text: "Every error is a hint about something you haven’t figured out yet. You don’t fear them, you read them.",
+
+    introEyebrow: "Before you start",
+    introTitle: "How the <em>game</em> works",
+    introLead: "Sixteen short levels: from your first line of code to loops, arrays and your own function. Each step has a small task with blanks, a real code run and an explanation of why it worked.",
+    step1Title: "You read the task",
+    step1Text: "A short explanation of what to do and why.",
+    step2Title: "You fill in the code",
+    step2Text: "The template has blanks — type what’s missing and press “Check”.",
+    step3Title: "You get an answer",
+    step3Text: "The code really runs: you see what the program printed and why.",
+    introStart: "Start learning →",
+    introSandbox: "Sandbox first",
+    backHome: "← Back home",
+
+    yourCode: "your code",
+    editorAria: "Code editor with blanks",
+    symBarAria: "Quick symbols",
+    symBarLabel: "symbols",
+    dqAria: "Double quote",
+    sqAria: "Single quote",
+    checkBtn: "Check",
+    hintBtn: "Hint",
+    solutionBtn: "Show solution",
+    explainerTitle: "What happened",
+    nextBtn: "Next level →",
+    outputCaption: "program output",
+
+    sandboxEyebrow: "Free mode",
+    sandboxTitle: "Sandbox",
+    sandboxLead: "Write anything and run it. The code runs in an isolated worker: it can’t see the page, and an endless loop is cut off after 1.5 seconds.",
+    exHelloBtn: "Hello, world",
+    exTableBtn: "Multiplication table",
+    exArrayBtn: "Array and methods",
+    exObjectBtn: "Object",
+    runBtn: "Run ▶",
+    clearBtn: "Clear",
+
+    finishEyebrow: "Course complete",
+    finishTitle: "You finished the whole <em>game</em>",
+    finishLead: "Sixteen levels behind you: output, numbers, variables, strings, conditions, loops, functions, arrays and objects. That is the foundation all of JavaScript stands on.",
+    statTime: "time",
+    statHints: "hints",
+    statAccuracy: "first try",
+    shareBtn: "Share your result",
+    toSandbox: "To the sandbox",
+    againBtn: "Play again",
+
+    footerLeft: "Code Game · a small course in sixteen steps",
+    footerRight: 'Progress is stored in your browser · <a href="#" id="privacy-link">what that means</a>',
+
+    stepLabel: "Level {n} of {total}",
+    levelAria: "Level {n}: {title}",
+    progressCount: "{done} / {total} · {xp} XP",
+    resumeDone: "Course complete · {xp} XP",
+    resumeResults: "See results →",
+    resumeAt: "You left off at level {n} · “{title}”",
+    resumeContinue: "Continue →",
+    running: "Running…",
+    solutionShown: "solution shown",
+    failedAttempts: "failed attempts: {n}",
+    alreadyDone: "Already completed ✓",
+    levelDone: "Level completed ✓",
+    toResults: "To the results →",
+    nextLevel: "Next level →",
+    emptyOutput: "the program printed nothing",
+    truncated: "…output truncated",
+    interrupted: "— execution stopped —",
+    unknownError: "unknown error",
+    runtimeError: "runtime error",
+    fillAll: "Fill in every blank — the code won’t run without them.",
+    revealVerdict: "The solution is shown — the level counts, but without XP. Make sure you understand why it works, then move on.",
+    correctBonus: "Correct! +{gain} XP · bonus for a clean attempt",
+    correctGain: "Correct! +{gain} XP",
+    correct: "Correct!",
+    doneBtn: "Done ✓",
+    timeoutMsg: "The code ran for more than 1.5 seconds. Looks like the loop never ends — check the stopping condition.",
+    runFail: "The code failed: <code>{err}</code>",
+    wrongOutput: "The code ran, but the output isn’t what the task asks for. Compare it with the task.",
+    hintTitle: "<strong>Hint.</strong>",
+    hintBlank: "Blank {n}: {hint}",
+    blankAria: "Blank {n}",
+    blankAriaPh: "Blank {n}, for example {ph}",
+    shareText: "I finished Code Game: {total} levels, {xp} XP in {time}. Try it too!",
+    shareTitle: "Code Game",
+    copied: "Result copied to the clipboard",
+    writeFirst: "Write some code first",
+    executing: "running…",
+    resetConfirm: "Reset your progress and start from level 1? XP and stats will be cleared too.",
+    resetDone: "Progress reset",
+    privacyToast: "Progress is stored only in this browser (localStorage). There are no accounts and no servers — nothing is sent anywhere.",
+    workerFail: "Could not run the code. Check the syntax.",
+    timeoutError: "Longer than 1.5 seconds — looks like an endless loop.",
+    secUnit: "{n}s",
+    minUnit: "{n} min",
+    hourUnit: "{h}h {m}m",
+    themeToLight: "Switch to light theme",
+    themeToDark: "Switch to dark theme",
+    langSwitched: "Language: English",
+
+    sandboxDefault: 'let sum = 0\nfor (let i = 1; i <= 5; i++) {\n  sum = sum + i\n}\nconsole.log("Sum:", sum)',
+    exHello: 'console.log("Hello, world!")',
+    exTable: 'for (let i = 1; i <= 5; i++) {\n  let row = ""\n  for (let j = 1; j <= 5; j++) {\n    row = row + (i * j) + "\\t"\n  }\n  console.log(row)\n}',
+    exArray: 'let fruits = ["apple", "banana", "cherry"]\nfruits.push("pear")\nconsole.log("Total:", fruits.length)\nfor (let f of fruits) {\n  console.log("- " + f)\n}',
+    exObject: 'let user = { name: "Ann", age: 20 }\nconsole.log(user.name, "—", user.age, "years old")'
+  }
+};
+/* ══════════════════ ДАННЫЕ КУРСА ══════════════════
+   id уровней одинаковые во всех языках — прогресс сохраняется при переключении. */
+var LEVELS_BY_LANG = {
+  ru: [
+    {
+      id: "output", concept: "Вывод", title: "Первый контакт",
+      task: 'Поздоровайся с компьютером — выведи на экран слово <b>Привет</b> с помощью команды <code>console.log</code>.',
+      explainer: '<code>console.log()</code> — это команда «напечатай». Всё, что внутри скобок, появится на экране. Текст в программировании всегда пишут в кавычках: <code>"Привет"</code>.',
+      template: 'console.log({0})',
+      blanks: [{ accept: ['"Привет"', "'Привет'"], placeholder: '"текст"', hint: 'Возьми слово Привет в двойные кавычки: <code>"Привет"</code>' }],
+      expected: ["Привет"]
+    },
+    {
+      id: "numbers", concept: "Числа", title: "Дважды два",
+      task: 'Заставь компьютер вывести число <b>5</b>, сложив <b>2</b> и <b>3</b>.',
+      explainer: 'Числа пишут <em>без кавычек</em> — тогда компьютер понимает, что это числа, и может их складывать. В кавычках это уже текст: <code>"2" + "3"</code> даёт <code>"23"</code>.',
+      template: 'console.log({0} + {1})',
+      blanks: [
+        { accept: ["2"], placeholder: "число", hint: 'Первое слагаемое — <code>2</code>' },
+        { accept: ["3"], placeholder: "число", hint: 'Второе слагаемое — <code>3</code>' }
+      ],
+      expected: ["5"]
+    },
+    {
+      id: "variables", concept: "Переменные", title: "Коробка с ярлыком",
+      task: 'Создай переменную <code>name</code> со значением <b>Аня</b>.',
+      explainer: 'Переменная — это коробка с ярлыком. Строка <code>let name = "Аня"</code> создаёт коробку и кладёт внутрь текст. Чтобы достать — пиши имя без кавычек.',
+      template: 'let name = {0}\nconsole.log(name)',
+      blanks: [{ accept: ['"Аня"', "'Аня'"], placeholder: '"значение"', hint: 'Значение — текст, значит нужны кавычки: <code>"Аня"</code>' }],
+      expected: ["Аня"]
+    },
+    {
+      id: "concat", concept: "Строки", title: "Привет, Аня",
+      task: 'Поприветствуй Аню. Программа должна вывести: <b>Привет, Аня!</b>',
+      explainer: 'Оператор <code>+</code> склеивает строки. В пропуск нужно вписать именно <code>name</code> — <em>без кавычек</em>. В кавычках это был бы просто текст «name».',
+      template: 'let name = "Аня"\nconsole.log("Привет, " + {0} + "!")',
+      blanks: [{ accept: ["name"], placeholder: "переменная", hint: 'Просто имя переменной — <code>name</code>. Без кавычек.' }],
+      expected: ["Привет, Аня!"]
+    },
+    {
+      id: "conditions", concept: "Условия", title: "Взрослый или ребёнок",
+      task: 'В переменной <code>age</code> лежит <b>20</b>. Допиши условие так, чтобы программа вывела <b>Взрослый</b>.',
+      explainer: '<code>if (условие) { ... } else { ... }</code> — если условие истинно, выполняется первый блок, иначе второй. <code>&gt;=</code> значит «больше или равно».',
+      template: 'let age = 20\nif (age >= {0}) {\n  console.log("Взрослый")\n} else {\n  console.log("Ребёнок")\n}',
+      blanks: [{ accept: ["18"], placeholder: "число", hint: 'Совершеннолетие наступает в <code>18</code> лет.' }],
+      expected: ["Взрослый"]
+    },
+    {
+      id: "loops", concept: "Циклы", title: "Считаем до трёх",
+      task: 'Выведи на экран числа <b>от 1 до 3</b>.',
+      explainer: 'Цикл <code>for</code> повторяет код, пока условие истинно. <code>i++</code> — каждый раз прибавлять 1. Поэтому важно, где остановиться: с <code>5</code> чисел будет пять.',
+      template: 'for (let i = 1; i <= {0}; i++) {\n  console.log(i)\n}',
+      blanks: [{ accept: ["3"], placeholder: "число", hint: 'Считаем до <code>3</code>.' }],
+      expected: ["1", "2", "3"]
+    },
+    {
+      id: "functions", concept: "Функции", title: "Своя функция",
+      task: 'Создай функцию <code>greet</code>. Программа должна вывести: <b>Привет, Аня</b>',
+      explainer: 'Параметр <code>name</code> — «место», куда подставляется аргумент. Не забудь пробел после запятой: без него получится «Привет,Аня».',
+      template: 'function greet(name) {\n  return {0} + name\n}\nconsole.log(greet("Аня"))',
+      blanks: [{ accept: ['"Привет, "', "'Привет, "], placeholder: '"строка"', hint: 'Начало приветствия — <code>"Привет, "</code> (с пробелом).' }],
+      expected: ["Привет, Аня"]
+    },
+    {
+      id: "combo", concept: "Всё вместе", title: "Найди тройку",
+      task: 'В цикле от 1 до 5 найди число <b>3</b> и выведи <b>Нашёл!</b>',
+      explainer: 'Циклы и условия работают в паре: проходим по всем числам и проверяем каждое. Как только совпало — печатаем.',
+      template: 'for (let i = 1; i <= 5; i++) {\n  if (i === {0}) {\n    console.log("Нашёл!")\n  }\n}',
+      blanks: [{ accept: ["3"], placeholder: "число", hint: 'Ищем число <code>3</code>.' }],
+      expected: ["Нашёл!"]
+    },
+    {
+      id: "arrays", concept: "Массивы", title: "Второй элемент",
+      task: 'В массиве <code>nums</code> три числа. Выведи <b>20</b> — второй элемент. Помни: счёт начинается с нуля.',
+      explainer: 'Массив — это список в квадратных скобках. Обращаются к элементу по индексу: <code>nums[0]</code> — первый, <code>nums[1]</code> — второй.',
+      template: 'let nums = [10, 20, 30]\nconsole.log(nums[{0}])',
+      blanks: [{ accept: ["1"], placeholder: "индекс", hint: 'Второй элемент — это индекс <code>1</code>.' }],
+      expected: ["20"]
+    },
+    {
+      id: "push", concept: "Массивы", title: "Добавь в конец",
+      task: 'Добавь в массив <b>вишню</b> и выведи третий элемент — он должен появиться.',
+      explainer: '<code>push()</code> добавляет элемент в конец массива и увеличивает его длину. Это метод самого массива, поэтому пишется через точку.',
+      template: 'let items = ["яблоко", "банан"]\nitems.{0}("вишня")\nconsole.log(items[2])',
+      blanks: [{ accept: ["push"], placeholder: "метод", hint: 'Метод добавления в конец — <code>push</code>.' }],
+      expected: ["вишня"]
+    },
+    {
+      id: "objects", concept: "Объекты", title: "Свойства",
+      task: 'Выведи имя пользователя. Программа должна напечатать <b>Аня</b>.',
+      explainer: 'Объект — набор пар «ключ: значение». Достают значение через точку: <code>user.name</code>. Ключ пишут без кавычек.',
+      template: 'let user = { name: "Аня", age: 20 }\nconsole.log(user.{0})',
+      blanks: [{ accept: ["name"], placeholder: "свойство", hint: 'Имя лежит в свойстве <code>name</code>.' }],
+      expected: ["Аня"]
+    },
+    {
+      id: "strings", concept: "Строки", title: "Капсом",
+      task: 'Сделай так, чтобы слово <b>кот</b> напечаталось большими буквами: <b>КОТ</b>.',
+      explainer: 'У строк есть методы. <code>toUpperCase()</code> возвращает копию строки заглавными буквами, сам <code>word</code> при этом не меняется.',
+      template: 'let word = "кот"\nconsole.log(word.{0}())',
+      blanks: [{ accept: ["toUpperCase"], placeholder: "метод", hint: 'Метод «сделать заглавными» — <code>toUpperCase</code>.' }],
+      expected: ["КОТ"]
+    },
+    {
+      id: "switch", concept: "Условия", title: "День недели",
+      task: 'Число <code>3</code> — это среда. Допиши <code>case</code>, чтобы программа вывела <b>Среда</b>.',
+      explainer: '<code>switch</code> сравнивает значение с вариантами <code>case</code>. Совпало — выполняется блок до <code>break</code>.',
+      template: 'let day = 3\nswitch (day) {\n  case {0}:\n    console.log("Среда")\n    break\n  default:\n    console.log("Не знаю")\n}',
+      blanks: [{ accept: ["3"], placeholder: "значение", hint: 'Среда — это третий день, значит <code>3</code>.' }],
+      expected: ["Среда"]
+    },
+    {
+      id: "forof", concept: "Циклы", title: "Удвоить каждый",
+      task: 'Выведи каждое число массива, умноженное на <b>2</b>: должно получиться <b>2, 4, 6</b>.',
+      explainer: '<code>for...of</code> перебирает элементы массива по одному: на каждом круге <code>n</code> — очередное число. Умножить — значит применить оператор к числу.',
+      template: 'let nums = [1, 2, 3]\nfor (let n of nums) {\n  console.log(n {0} 2)\n}',
+      blanks: [{ accept: ["*"], placeholder: "оператор", hint: 'Умножение в JavaScript — звёздочка <code>*</code>.' }],
+      expected: ["2", "4", "6"]
+    },
+    {
+      id: "arrow", concept: "Функции", title: "Стрелка",
+      task: 'Функция <code>double</code> должна удваивать число. Сейчас она возвращает <b>8</b> для аргумента 4.',
+      explainer: 'Стрелочная функция — короткая запись: <code>(x) =&gt; x * 2</code>. Всё, что после стрелки, возвращается автоматически.',
+      template: 'const double = (x) => x {0} 2\nconsole.log(double(4))',
+      blanks: [{ accept: ["*"], placeholder: "оператор", hint: 'Удвоить — умножить на 2: <code>*</code>.' }],
+      expected: ["8"]
+    },
+    {
+      id: "accumulate", concept: "Всё вместе", title: "Накопитель",
+      task: 'Цикл должен сложить числа от 1 до 3 и вывести <b>6</b>. Найди пропущенный оператор.',
+      explainer: 'Накопитель — переменная, которая обновляется на каждом шаге: <code>total = total + i</code>. Это самая частая конструкция в реальном коде.',
+      template: 'let total = 0\nfor (let i = 1; i <= 3; i++) {\n  total = total {0} i\n}\nconsole.log(total)',
+      blanks: [{ accept: ["+"], placeholder: "оператор", hint: 'Складываем — значит <code>+</code>.' }],
+      expected: ["6"]
+    }
+  ],
+
+  en: [
+    {
+      id: "output", concept: "Output", title: "First contact",
+      task: 'Say hello to the computer — print the word <b>Hello</b> with the <code>console.log</code> command.',
+      explainer: '<code>console.log()</code> is the “print” command. Whatever you put inside the brackets appears on screen. Text in code always goes in quotes: <code>"Hello"</code>.',
+      template: 'console.log({0})',
+      blanks: [{ accept: ['"Hello"', "'Hello'"], placeholder: '"text"', hint: 'Put the word Hello in double quotes: <code>"Hello"</code>' }],
+      expected: ["Hello"]
+    },
+    {
+      id: "numbers", concept: "Numbers", title: "Two plus three",
+      task: 'Make the computer print the number <b>5</b> by adding <b>2</b> and <b>3</b>.',
+      explainer: 'Numbers are written <em>without quotes</em> — that is how the computer knows they are numbers and can add them. In quotes it is just text: <code>"2" + "3"</code> gives <code>"23"</code>.',
+      template: 'console.log({0} + {1})',
+      blanks: [
+        { accept: ["2"], placeholder: "number", hint: 'The first addend is <code>2</code>' },
+        { accept: ["3"], placeholder: "number", hint: 'The second addend is <code>3</code>' }
+      ],
+      expected: ["5"]
+    },
+    {
+      id: "variables", concept: "Variables", title: "A box with a label",
+      task: 'Create a variable <code>name</code> with the value <b>Ann</b>.',
+      explainer: 'A variable is a box with a label. <code>let name = "Ann"</code> creates the box and puts text inside. To get it back, write the name without quotes.',
+      template: 'let name = {0}\nconsole.log(name)',
+      blanks: [{ accept: ['"Ann"', "'Ann'"], placeholder: '"value"', hint: 'The value is text, so it needs quotes: <code>"Ann"</code>' }],
+      expected: ["Ann"]
+    },
+    {
+      id: "concat", concept: "Strings", title: "Hello, Ann",
+      task: 'Say hello to Ann. The program must print: <b>Hello, Ann!</b>',
+      explainer: 'The <code>+</code> operator glues strings together. The blank takes <code>name</code> — <em>without quotes</em>. In quotes it would just be the text “name”.',
+      template: 'let name = "Ann"\nconsole.log("Hello, " + {0} + "!")',
+      blanks: [{ accept: ["name"], placeholder: "variable", hint: 'Just the variable name — <code>name</code>. No quotes.' }],
+      expected: ["Hello, Ann!"]
+    },
+    {
+      id: "conditions", concept: "Conditions", title: "Adult or child",
+      task: 'The variable <code>age</code> holds <b>20</b>. Finish the condition so the program prints <b>Adult</b>.',
+      explainer: '<code>if (condition) { ... } else { ... }</code> — if the condition is true, the first block runs, otherwise the second. <code>&gt;=</code> means “greater than or equal to”.',
+      template: 'let age = 20\nif (age >= {0}) {\n  console.log("Adult")\n} else {\n  console.log("Child")\n}',
+      blanks: [{ accept: ["18"], placeholder: "number", hint: 'You come of age at <code>18</code>.' }],
+      expected: ["Adult"]
+    },
+    {
+      id: "loops", concept: "Loops", title: "Counting to three",
+      task: 'Print the numbers <b>from 1 to 3</b>.',
+      explainer: 'A <code>for</code> loop repeats code while the condition is true. <code>i++</code> means “add 1 each time”. That is why the stopping point matters: with <code>5</code> you get five numbers.',
+      template: 'for (let i = 1; i <= {0}; i++) {\n  console.log(i)\n}',
+      blanks: [{ accept: ["3"], placeholder: "number", hint: 'Count up to <code>3</code>.' }],
+      expected: ["1", "2", "3"]
+    },
+    {
+      id: "functions", concept: "Functions", title: "Your own function",
+      task: 'Create a function <code>greet</code>. The program must print: <b>Hello, Ann</b>',
+      explainer: 'The parameter <code>name</code> is a “slot” where the argument goes. Don’t forget the space after the comma: without it you get “Hello,Ann”.',
+      template: 'function greet(name) {\n  return {0} + name\n}\nconsole.log(greet("Ann"))',
+      blanks: [{ accept: ['"Hello, "', "'Hello, "], placeholder: '"string"', hint: 'The greeting starts with <code>"Hello, "</code> (with a space).' }],
+      expected: ["Hello, Ann"]
+    },
+    {
+      id: "combo", concept: "Everything together", title: "Find the three",
+      task: 'In a loop from 1 to 5, find the number <b>3</b> and print <b>Found!</b>',
+      explainer: 'Loops and conditions work as a pair: we walk through every number and check each one. As soon as it matches, we print.',
+      template: 'for (let i = 1; i <= 5; i++) {\n  if (i === {0}) {\n    console.log("Found!")\n  }\n}',
+      blanks: [{ accept: ["3"], placeholder: "number", hint: 'Look for the number <code>3</code>.' }],
+      expected: ["Found!"]
+    },
+    {
+      id: "arrays", concept: "Arrays", title: "The second element",
+      task: 'The array <code>nums</code> holds three numbers. Print <b>20</b> — the second element. Remember: counting starts at zero.',
+      explainer: 'An array is a list in square brackets. You reach an element by index: <code>nums[0]</code> is the first, <code>nums[1]</code> the second.',
+      template: 'let nums = [10, 20, 30]\nconsole.log(nums[{0}])',
+      blanks: [{ accept: ["1"], placeholder: "index", hint: 'The second element is index <code>1</code>.' }],
+      expected: ["20"]
+    },
+    {
+      id: "push", concept: "Arrays", title: "Add to the end",
+      task: 'Add <b>a cherry</b> to the array and print the third element — it should be there.',
+      explainer: '<code>push()</code> adds an element to the end of an array and increases its length. It is a method of the array itself, so it is written with a dot.',
+      template: 'let items = ["apple", "banana"]\nitems.{0}("cherry")\nconsole.log(items[2])',
+      blanks: [{ accept: ["push"], placeholder: "method", hint: 'The method that adds to the end is <code>push</code>.' }],
+      expected: ["cherry"]
+    },
+    {
+      id: "objects", concept: "Objects", title: "Properties",
+      task: 'Print the user’s name. The program must print <b>Ann</b>.',
+      explainer: 'An object is a set of “key: value” pairs. You get a value with a dot: <code>user.name</code>. Keys are written without quotes.',
+      template: 'let user = { name: "Ann", age: 20 }\nconsole.log(user.{0})',
+      blanks: [{ accept: ["name"], placeholder: "property", hint: 'The name lives in the <code>name</code> property.' }],
+      expected: ["Ann"]
+    },
+    {
+      id: "strings", concept: "Strings", title: "All caps",
+      task: 'Make the word <b>cat</b> print in capitals: <b>CAT</b>.',
+      explainer: 'Strings have methods. <code>toUpperCase()</code> returns a copy of the string in capitals; <code>word</code> itself stays unchanged.',
+      template: 'let word = "cat"\nconsole.log(word.{0}())',
+      blanks: [{ accept: ["toUpperCase"], placeholder: "method", hint: 'The “make uppercase” method is <code>toUpperCase</code>.' }],
+      expected: ["CAT"]
+    },
+    {
+      id: "switch", concept: "Conditions", title: "Day of the week",
+      task: 'The number <code>3</code> is Wednesday. Finish the <code>case</code> so the program prints <b>Wednesday</b>.',
+      explainer: '<code>switch</code> compares a value with <code>case</code> options. On a match, the block runs up to <code>break</code>.',
+      template: 'let day = 3\nswitch (day) {\n  case {0}:\n    console.log("Wednesday")\n    break\n  default:\n    console.log("Don\'t know")\n}',
+      blanks: [{ accept: ["3"], placeholder: "value", hint: 'Wednesday is the third day, so <code>3</code>.' }],
+      expected: ["Wednesday"]
+    },
+    {
+      id: "forof", concept: "Loops", title: "Double each",
+      task: 'Print every number of the array multiplied by <b>2</b>: you should get <b>2, 4, 6</b>.',
+      explainer: '<code>for...of</code> walks through the array one element at a time: on each round <code>n</code> is the next number. To multiply, you apply an operator to the number.',
+      template: 'let nums = [1, 2, 3]\nfor (let n of nums) {\n  console.log(n {0} 2)\n}',
+      blanks: [{ accept: ["*"], placeholder: "operator", hint: 'Multiplication in JavaScript is the star <code>*</code>.' }],
+      expected: ["2", "4", "6"]
+    },
+    {
+      id: "arrow", concept: "Functions", title: "Arrow",
+      task: 'The function <code>double</code> should double a number. With the right operator it returns <b>8</b> for the argument 4.',
+      explainer: 'An arrow function is a short form: <code>(x) =&gt; x * 2</code>. Whatever follows the arrow is returned automatically.',
+      template: 'const double = (x) => x {0} 2\nconsole.log(double(4))',
+      blanks: [{ accept: ["*"], placeholder: "operator", hint: 'To double — multiply by 2: <code>*</code>.' }],
+      expected: ["8"]
+    },
+    {
+      id: "accumulate", concept: "Everything together", title: "Accumulator",
+      task: 'The loop should add the numbers from 1 to 3 and print <b>6</b>. Find the missing operator.',
+      explainer: 'An accumulator is a variable updated on every step: <code>total = total + i</code>. It is the most common pattern in real code.',
+      template: 'let total = 0\nfor (let i = 1; i <= 3; i++) {\n  total = total {0} i\n}\nconsole.log(total)',
+      blanks: [{ accept: ["+"], placeholder: "operator", hint: 'We are adding, so <code>+</code>.' }],
+      expected: ["6"]
+    }
+  ]
+};
+(function () {
+  "use strict";
+
+  var TOTAL = LEVELS_BY_LANG.ru.length;
+  var MAX_XP = TOTAL * 15;
+  var STORAGE_KEY = "codegame.state.v6";
+  var OLD_KEY = "codegame.progress.v5";
+  var THEME_KEY = "codegame.theme";
+  var LANG_KEY = "codegame.lang";
+  var EVENTS_KEY = "codegame.events";
+
+  var lang = document.documentElement.getAttribute("lang") === "en" ? "en" : "ru";
+
+  var state = {
+    completed: {}, current: 0, xp: 0,
+    hints: {}, attempts: {}, revealed: {},
+    startedAt: null, finishedAt: null,
+    streak: 1, lastDay: null, checks: 0, firstTry: 0
+  };
+
+  var currentLevel = null;
+  var currentScreen = "home";
+  var busy = false;
+  var sandboxDefault = "";
+
+  /* ══════════════════ ЯЗЫК ══════════════════ */
+  function t(key, vars) {
+    var dict = I18N[lang] || I18N.ru;
+    var s = dict[key];
+    if (s === undefined || s === null) s = I18N.ru[key];
+    if (s === undefined || s === null) s = key;
+    if (vars) {
+      s = String(s).replace(/\{(\w+)\}/g, function (m, name) {
+        return vars[name] !== undefined && vars[name] !== null ? String(vars[name]) : m;
+      });
+    }
+    return s;
+  }
+
+  function LV() {
+    return LEVELS_BY_LANG[lang] || LEVELS_BY_LANG.ru;
+  }
+
+  function setAttr(id, attr, value) {
+    var el = document.getElementById(id);
+    if (el) el.setAttribute(attr, value);
+  }
+
+  function applyMeta() {
+    var m = META[lang] || META.ru;
+    document.title = m.title;
+    setAttr("meta-desc", "content", m.desc);
+    setAttr("og-title", "content", m.ogTitle);
+    setAttr("og-desc", "content", m.ogDesc);
+    setAttr("og-site", "content", m.site);
+    setAttr("og-locale", "content", m.locale);
+    setAttr("og-locale-alt", "content", lang === "ru" ? "en_US" : "ru_RU");
+    setAttr("tw-title", "content", m.ogTitle);
+    setAttr("tw-desc", "content", m.ogDesc);
+  }
+
+  function applyStatic() {
+    var i, nodes;
+    nodes = document.querySelectorAll("[data-i18n]");
+    for (i = 0; i < nodes.length; i++) nodes[i].innerHTML = t(nodes[i].getAttribute("data-i18n"));
+
+    nodes = document.querySelectorAll("[data-i18n-aria]");
+    for (i = 0; i < nodes.length; i++) nodes[i].setAttribute("aria-label", t(nodes[i].getAttribute("data-i18n-aria")));
+
+    nodes = document.querySelectorAll("[data-i18n-title]");
+    for (i = 0; i < nodes.length; i++) nodes[i].setAttribute("title", t(nodes[i].getAttribute("data-i18n-title")));
+
+    nodes = document.querySelectorAll("[data-i18n-placeholder]");
+    for (i = 0; i < nodes.length; i++) nodes[i].setAttribute("placeholder", t(nodes[i].getAttribute("data-i18n-placeholder")));
+  }
+
+  function syncLangButtons() {
+    var btns = document.querySelectorAll(".lang__btn");
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].setAttribute("aria-pressed", btns[i].getAttribute("data-lang") === lang ? "true" : "false");
+    }
+  }
+
+  function setLang(next, persist) {
+    if (next !== "ru" && next !== "en") return;
+    if (next === lang) return;
+
+    var savedValues = null, savedId = null;
+    if (currentScreen === "play" && currentLevel) {
+      savedId = currentLevel.id;
+      if (!state.completed[savedId]) {
+        var ins = editorInputs();
+        savedValues = [];
+        for (var s = 0; s < ins.length; s++) savedValues.push(ins[s].value);
+      }
+    }
+
+    var oldDefault = sandboxDefault;
+    lang = next;
+    document.documentElement.setAttribute("lang", lang);
+    document.documentElement.setAttribute("data-lang", lang);
+
+    applyStatic();
+    applyMeta();
+    syncLangButtons();
+    applyTheme(document.documentElement.getAttribute("data-theme") === "dark" ? "dark" : "light", false);
+
+    sandboxDefault = t("sandboxDefault");
+    var ta = document.getElementById("sandbox-code");
+    if (ta && (ta.value === oldDefault || !ta.value.trim())) ta.value = sandboxDefault;
+
+    // Перерисовываем уровень в любом случае: экран может быть скрыт,
+    // но при возврате в игру текст должен быть уже на новом языке.
+    renderLevel();
+    if (savedValues && currentLevel && currentLevel.id === savedId) {
+      var ins2 = editorInputs();
+      for (var j = 0; j < ins2.length && j < savedValues.length; j++) {
+        if (savedValues[j]) {
+          ins2[j].value = savedValues[j];
+          autosize(ins2[j]);
+        }
+      }
+    }
+    renderHome();
+    if (currentScreen === "finish") renderFinishStats();
+
+    if (persist) {
+      try { localStorage.setItem(LANG_KEY, lang); } catch (e) {}
+      try {
+        if (/^https?:$/.test(location.protocol)) {
+          var u = new URL(location.href);
+          u.searchParams.set("lang", lang);
+          history.replaceState(null, "", u.toString());
+        }
+      } catch (e) {}
+      toast(t("langSwitched"));
+      track("lang", { lang: lang });
+    }
+  }
+
+  /* ══════════════════ ХРАНИЛИЩЕ ══════════════════ */
+  function saveState() {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+  }
+
+  function loadState() {
+    var raw = null;
+    try { raw = localStorage.getItem(STORAGE_KEY); } catch (e) {}
+    if (raw) {
+      try {
+        var p = JSON.parse(raw);
+        if (p && typeof p === "object") {
+          for (var k in state) {
+            if (Object.prototype.hasOwnProperty.call(p, k) && p[k] !== null && p[k] !== undefined) {
+              state[k] = p[k];
+            }
+          }
+        }
+      } catch (e) {}
+      return;
+    }
+    // Миграция со старой версии: не теряем прогресс
+    try {
+      var old = JSON.parse(localStorage.getItem(OLD_KEY) || "null");
+      if (old && old.completed && typeof old.completed === "object") {
+        state.completed = old.completed;
+        state.current = typeof old.current === "number" ? old.current : 0;
+        state.xp = Object.keys(old.completed).length * 10;
+        saveState();
+      }
+    } catch (e) {}
+  }
+
+  function track(name, data) {
+    try {
+      var arr = JSON.parse(localStorage.getItem(EVENTS_KEY) || "[]");
+      if (!Array.isArray(arr)) arr = [];
+      arr.push({ t: Date.now(), n: name, d: data || null });
+      if (arr.length > 200) arr = arr.slice(-200);
+      localStorage.setItem(EVENTS_KEY, JSON.stringify(arr));
+    } catch (e) {}
+    try {
+      if (Array.isArray(window.dataLayer)) {
+        var ev = { event: "kodgame:" + name };
+        if (data) { for (var k in data) { if (Object.prototype.hasOwnProperty.call(data, k)) ev[k] = data[k]; } }
+        window.dataLayer.push(ev);
+      }
+    } catch (e) {}
+    if (window.console && console.debug) console.debug("[kodgame]", name, data || "");
+  }
+  window.kodGameTrack = track;
+
+  function pad2(n) { return n < 10 ? "0" + n : "" + n; }
+  function todayKey() {
+    var d = new Date();
+    return d.getFullYear() + "-" + pad2(d.getMonth() + 1) + "-" + pad2(d.getDate());
+  }
+  function touchStreak() {
+    var today = todayKey();
+    if (state.lastDay === today) return;
+    if (state.lastDay) {
+      var diff = Math.round((new Date(today) - new Date(state.lastDay)) / 86400000);
+      state.streak = (diff === 1) ? (Number(state.streak) || 1) + 1 : 1;
+    } else {
+      state.streak = 1;
+    }
+    state.lastDay = today;
+    saveState();
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  }
+  function highlight(text) {
+    return escHtml(text).replace(
+      /("(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*')|\b(console|log|let|const|var|function|return|for|of|switch|case|break|default|if|else|new|true|false|while)\b|\b(\d+(?:\.\d+)?)\b/g,
+      function (m, str, kw, num) {
+        if (str) return '<span class="tok-str">' + str + '</span>';
+        if (kw)  return '<span class="tok-kw">' + kw + '</span>';
+        if (num) return '<span class="tok-num">' + num + '</span>';
+        return m;
+      }
+    );
+  }
+
+  /* ══════════════════ ЗАПУСК КОДА В ВОРКЕРЕ ══════════════════ */
+  var WORKER_SRC = [
+    'var LIMIT = 200;',
+    'function fmt(v) {',
+    '  if (typeof v === "string") return v;',
+    '  if (v === null) return "null";',
+    '  if (v === undefined) return "undefined";',
+    '  if (typeof v === "number" || typeof v === "boolean" || typeof v === "bigint") return String(v);',
+    '  if (typeof v === "function") return "function " + (v.name || "anonymous");',
+    '  try { var j = JSON.stringify(v); return j === undefined ? String(v) : j; } catch (e) { return String(v); }',
+    '}',
+    'self.onmessage = function (e) {',
+    '  var out = [], capped = false;',
+    '  function push(args) {',
+    '    if (out.length >= LIMIT) { capped = true; return; }',
+    '    var parts = [];',
+    '    for (var i = 0; i < args.length; i++) parts.push(fmt(args[i]));',
+    '    out.push(parts.join(" "));',
+    '  }',
+    '  var fake = {',
+    '    log: function () { push(arguments); },',
+    '    info: function () { push(arguments); },',
+    '    warn: function () { push(arguments); },',
+    '    error: function () { push(arguments); },',
+    '    debug: function () { push(arguments); }',
+    '  };',
+    '  try {',
+    '    var fn = new Function("console", "\\"use strict\\";\\n" + e.data.code);',
+    '    fn(fake);',
+    '    self.postMessage({ ok: true, logs: out, capped: capped });',
+    '  } catch (err) {',
+    '    self.postMessage({',
+    '      ok: false, logs: out, capped: capped,',
+    '      error: (err && err.name ? err.name + ": " : "") + (err && err.message ? err.message : String(err))',
+    '    });',
+    '  }',
+    '};'
+  ].join("\n");
+
+  var workerUrl = null;
+  function getWorkerUrl() {
+    if (workerUrl) return workerUrl;
+    workerUrl = URL.createObjectURL(new Blob([WORKER_SRC], { type: "text/javascript" }));
+    return workerUrl;
+  }
+
+  function fmtFallback(v) {
+    if (typeof v === "string") return v;
+    if (v === null) return "null";
+    if (v === undefined) return "undefined";
+    if (typeof v === "number" || typeof v === "boolean") return String(v);
+    if (typeof v === "function") return "function " + (v.name || "anonymous");
+    try { var j = JSON.stringify(v); return j === undefined ? String(v) : j; } catch (e) { return String(v); }
+  }
+
+  function runFallback(code, cb) {
+    var out = [];
+    var fake = {
+      log: function () { if (out.length < 200) { var p = []; for (var i = 0; i < arguments.length; i++) p.push(fmtFallback(arguments[i])); out.push(p.join(" ")); } },
+      info: function () { fake.log.apply(null, arguments); },
+      warn: function () { fake.log.apply(null, arguments); },
+      error: function () { fake.log.apply(null, arguments); },
+      debug: function () { fake.log.apply(null, arguments); }
+    };
+    try {
+      var fn = new Function("console", '"use strict";\n' + code);
+      fn(fake);
+      cb({ ok: true, logs: out });
+    } catch (err) {
+      cb({ ok: false, logs: out, error: (err && err.name ? err.name + ": " : "") + (err && err.message ? err.message : String(err)) });
+    }
+  }
+
+  function runCode(code, cb) {
+    var finished = false, worker = null, timer = null;
+    function done(res) {
+      if (finished) return;
+      finished = true;
+      if (timer) clearTimeout(timer);
+      if (worker) { try { worker.terminate(); } catch (e) {} }
+      cb(res);
+    }
+    try {
+      worker = new Worker(getWorkerUrl());
+      worker.onmessage = function (e) { done(e.data); };
+      worker.onerror = function (ev) {
+        done({ ok: false, logs: [], error: t("workerFail") + (ev && ev.message ? " (" + ev.message + ")" : "") });
+      };
+      timer = setTimeout(function () {
+        done({ ok: false, logs: [], timeout: true, error: t("timeoutError") });
+      }, 1500);
+      worker.postMessage({ code: code });
+    } catch (e) {
+      runFallback(code, done);
+    }
+  }
+
+  function buildCode(template, values) {
+    return template.replace(/\{(\d+)\}/g, function (m, i) {
+      var v = values[Number(i)];
+      return v === undefined ? "" : v;
+    });
+  }
+
+  function sameOutput(logs, expected) {
+    if (!logs || logs.length !== expected.length) return false;
+    for (var i = 0; i < expected.length; i++) {
+      if (String(logs[i]).trim() !== String(expected[i]).trim()) return false;
+    }
+    return true;
+  }
+
+  /* ══════════════════ МЕЛОЧИ ИНТЕРФЕЙСА ══════════════════ */
+  var toastTimer = null;
+  function toast(msg) {
+    var el = document.getElementById("toast");
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add("show");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove("show"); }, 2600);
+  }
+
+  function applyTheme(theme, persist) {
+    document.documentElement.setAttribute("data-theme", theme);
+    if (persist !== false) { try { localStorage.setItem(THEME_KEY, theme); } catch (e) {} }
+    var meta = document.getElementById("meta-theme");
+    if (meta) meta.setAttribute("content", theme === "dark" ? "#14121c" : "#faf6ef");
+    var btn = document.getElementById("theme-btn");
+    if (btn) {
+      var label = theme === "dark" ? t("themeToLight") : t("themeToDark");
+      btn.textContent = theme === "dark" ? "☀" : "☾";
+      btn.setAttribute("aria-label", label);
+      btn.title = label;
+    }
+  }
+
+  function showScreen(name) {
+    var map = {
+      home: "screen-home", intro: "screen-intro", play: "screen-play",
+      sandbox: "screen-sandbox", finish: "screen-finish"
+    };
+    for (var k in map) {
+      if (Object.prototype.hasOwnProperty.call(map, k)) {
+        var el = document.getElementById(map[k]);
+        if (el) el.hidden = (k !== name);
+      }
+    }
+    var resetBtn = document.getElementById("reset-btn");
+    if (resetBtn) resetBtn.hidden = (name !== "play");
+    currentScreen = name;
+    window.scrollTo(0, 0);
+    var heading = document.querySelector("#" + map[name] + " h1, #" + map[name] + " h2");
+    if (heading && name !== "home") {
+      try { heading.focus({ preventScroll: true }); } catch (e) { heading.focus(); }
+    }
+  }
+
+  function renderHeader() {
+    var sv = document.getElementById("streak-val");
+    if (sv) sv.textContent = String(state.streak || 1);
+    var sc = document.getElementById("streak-chip");
+    if (sc) sc.title = t("streakTitle") + ": " + (state.streak || 1);
+  }
+
+  function completedCount() {
+    var levels = LV(), n = 0;
+    for (var i = 0; i < levels.length; i++) {
+      if (state.completed[levels[i].id]) n++;
+    }
+    return n;
+  }
+
+  function allDone() { return completedCount() === TOTAL; }
+
+  function renderHome() {
+    var bar = document.getElementById("resume-bar");
+    var text = document.getElementById("resume-text");
+    var btn = document.getElementById("resume-btn");
+    var done = completedCount();
+    if (!bar) return;
+    if (done === 0) {
+      bar.classList.remove("show");
+      return;
+    }
+    bar.classList.add("show");
+    if (done === TOTAL) {
+      text.textContent = t("resumeDone", { xp: state.xp || 0 });
+      btn.textContent = t("resumeResults");
+      btn.onclick = showFinish;
+    } else {
+      var lv = LV()[Math.min(state.current, TOTAL - 1)];
+      text.textContent = t("resumeAt", { n: state.current + 1, title: lv.title });
+      btn.textContent = t("resumeContinue");
+      btn.onclick = startPlaying;
+    }
+    renderHeader();
+  }
+
+  function renderProgress() {
+    var dots = document.getElementById("progress-dots");
+    if (!dots) return;
+    dots.innerHTML = "";
+    var levels = LV();
+    var maxVisit = firstUncompleted();
+
+    for (var i = 0; i < levels.length; i++) {
+      (function (i) {
+        var lv = levels[i];
+        var btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "dot";
+        btn.title = (i + 1) + ". " + lv.title;
+        btn.setAttribute("aria-label", t("levelAria", { n: i + 1, title: lv.title }));
+        if (state.completed[lv.id]) btn.classList.add("done");
+        if (i === state.current) {
+          btn.classList.add("current");
+          btn.setAttribute("aria-current", "step");
+        }
+        if (i > maxVisit) btn.disabled = true;
+        else btn.onclick = function () { state.current = i; saveState(); renderLevel(); };
+        dots.appendChild(btn);
+      })(i);
+    }
+
+    var stepLabel = document.getElementById("step-label");
+    var progressCount = document.getElementById("progress-count");
+    if (stepLabel) stepLabel.textContent = t("stepLabel", { n: state.current + 1, total: TOTAL });
+    if (progressCount) progressCount.textContent = t("progressCount", { done: completedCount(), total: TOTAL, xp: state.xp || 0 });
+  }
+
+  function firstUncompleted() {
+    var levels = LV();
+    for (var i = 0; i < levels.length; i++) {
+      if (!state.completed[levels[i].id]) return i;
+    }
+    return TOTAL - 1;
+  }
+
+  function autosize(input) {
+    var len = Math.max(input.value.length, input.placeholder.length, 3);
+    input.style.width = (len + 1.2) + "ch";
+  }
+
+  function editorInputs() {
+    return document.querySelectorAll("#code-editor input.blank");
+  }
+
+  function setBusy(on) {
+    busy = on;
+    var btn = document.getElementById("check-btn");
+    if (btn) {
+      btn.disabled = on;
+      if (on) btn.textContent = t("running");
+    }
+  }
+
+  function isNumericPlaceholder(ph) {
+    return /^(число|number|индекс|index|значение|value)$/i.test(ph || "");
+  }
+
+  /* ══════════════════ ОТРИСОВКА УРОВНЯ ══════════════════ */
+  function setVerdict(kind, html) {
+    var el = document.getElementById("verdict");
+    if (!el) return;
+    el.className = "verdict show verdict--" + kind;
+    el.innerHTML = html;
+  }
+  function clearVerdict() {
+    var el = document.getElementById("verdict");
+    if (!el) return;
+    el.className = "verdict";
+    el.innerHTML = "";
+  }
+
+  function clearPanels() {
+    document.getElementById("output-panel").classList.remove("show");
+    document.getElementById("output-lines").innerHTML = "";
+    document.getElementById("output-lines").classList.remove("is-error");
+    document.getElementById("explainer").classList.remove("show");
+    document.getElementById("explainer-body").innerHTML = "";
+    document.getElementById("hint-box").classList.remove("show");
+    document.getElementById("hint-box").innerHTML = "";
+    document.getElementById("next-btn").classList.remove("show");
+    clearVerdict();
+  }
+
+  function updateAttemptNote() {
+    var el = document.getElementById("attempt-note");
+    if (!el || !currentLevel) return;
+    if (state.revealed[currentLevel.id]) { el.textContent = t("solutionShown"); return; }
+    var a = state.attempts[currentLevel.id] || 0;
+    el.textContent = a ? t("failedAttempts", { n: a }) : "";
+  }
+
+  function renderLevel() {
+    var levels = LV();
+    var lv = levels[state.current];
+    if (!lv) return;
+    currentLevel = lv;
+
+    document.getElementById("concept-badge").textContent = lv.concept;
+    document.getElementById("level-title").textContent = lv.title;
+    document.getElementById("level-task").innerHTML = lv.task;
+
+    var editor = document.getElementById("code-editor");
+    editor.innerHTML = "";
+
+    var segments = lv.template.split(/(\{\d+\})/);
+    for (var k = 0; k < segments.length; k++) {
+      var segment = segments[k];
+      var match = segment.match(/^\{(\d+)\}$/);
+      if (match) {
+        (function (idx, blank) {
+          var input = document.createElement("input");
+          input.type = "text";
+          input.className = "blank";
+          input.setAttribute("data-index", String(idx));
+          input.placeholder = blank.placeholder || "";
+          input.setAttribute("autocomplete", "off");
+          input.setAttribute("autocapitalize", "off");
+          input.setAttribute("autocorrect", "off");
+          input.setAttribute("spellcheck", "false");
+          input.setAttribute("inputmode", isNumericPlaceholder(blank.placeholder) ? "numeric" : "text");
+          input.setAttribute("enterkeyhint", idx < lv.blanks.length - 1 ? "next" : "done");
+          input.setAttribute("aria-label", blank.placeholder
+            ? t("blankAriaPh", { n: idx + 1, ph: blank.placeholder })
+            : t("blankAria", { n: idx + 1 }));
+          input.style.width = "4ch";
+          input.oninput = function () {
+            this.classList.remove("wrong", "correct");
+            autosize(this);
+          };
+          input.onfocus = function () {
+            var self = this;
+            if (window.matchMedia("(pointer: coarse)").matches) {
+              setTimeout(function () {
+                try { self.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (e) { self.scrollIntoView(); }
+              }, 300);
+            }
+          };
+          input.onkeydown = function (e) {
+            if (e.key === "Enter") {
+              e.preventDefault();
+              var all = editorInputs();
+              var pos = Array.prototype.indexOf.call(all, this);
+              if (pos >= 0 && pos < all.length - 1) all[pos + 1].focus();
+              else checkAnswers();
+            }
+          };
+          editor.appendChild(input);
+          autosize(input);
+        })(Number(match[1]), lv.blanks[Number(match[1])]);
+      } else if (segment) {
+        var span = document.createElement("span");
+        span.innerHTML = highlight(segment);
+        while (span.firstChild) editor.appendChild(span.firstChild);
+      }
+    }
+
+    clearPanels();
+
+    var checkBtn = document.getElementById("check-btn");
+    checkBtn.disabled = false;
+    checkBtn.textContent = t("checkBtn");
+
+    var solBtn = document.getElementById("solution-btn");
+    solBtn.hidden = (state.attempts[lv.id] || 0) < 3 || !!state.completed[lv.id];
+
+    updateAttemptNote();
+
+    if (state.completed[lv.id]) {
+      showSolved(true);
+    }
+    renderProgress();
+    renderHeader();
+  }
+
+  /* Показать уже пройденный уровень: подставляем эталон и реально его выполняем */
+  function showSolved(runAgain) {
+    var lv = currentLevel;
+    if (!lv) return;
+    var inputs = editorInputs();
+    for (var i = 0; i < inputs.length; i++) {
+      var idx = Number(inputs[i].getAttribute("data-index"));
+      var blank = lv.blanks[idx];
+      if (blank) {
+        inputs[i].value = blank.accept[0];
+        autosize(inputs[i]);
+      }
+      inputs[i].readOnly = true;
+      inputs[i].classList.add("correct");
+      inputs[i].classList.remove("wrong");
+    }
+
+    if (runAgain !== false) {
+      var values = [];
+      for (var j = 0; j < lv.blanks.length; j++) values.push(lv.blanks[j].accept[0]);
+      runCode(buildCode(lv.template, values), function (res) {
+        if (currentLevel !== lv) return;
+        showOutput(res);
+      });
+    }
+
+    document.getElementById("explainer-body").innerHTML = lv.explainer;
+    document.getElementById("explainer").classList.add("show");
+
+    var checkBtn = document.getElementById("check-btn");
+    checkBtn.disabled = true;
+    checkBtn.textContent = t("alreadyDone");
+
+    setVerdict("ok", t("levelDone"));
+    showNextButton();
+  }
+
+  function showNextButton() {
+    var nextBtn = document.getElementById("next-btn");
+    var isLast = state.current >= TOTAL - 1;
+    nextBtn.classList.add("show");
+    if (isLast) {
+      nextBtn.textContent = t("toResults");
+      nextBtn.onclick = showFinish;
+    } else {
+      nextBtn.textContent = t("nextLevel");
+      nextBtn.onclick = nextLevel;
+    }
+  }
+
+  /* ══════════════════ ВЫВОД ПРОГРАММЫ ══════════════════ */
+  function addOutputLine(el, text, muted) {
+    var div = document.createElement("div");
+    div.className = "output-line" + (muted ? " output-line--muted" : "");
+    div.textContent = text;
+    el.appendChild(div);
+  }
+
+  function paintOutput(linesEl, res) {
+    linesEl.innerHTML = "";
+    linesEl.classList.toggle("is-error", !res.ok);
+    if (res.logs && res.logs.length) {
+      for (var i = 0; i < res.logs.length; i++) addOutputLine(linesEl, res.logs[i], false);
+    }
+    if (res.ok) {
+      if (!res.logs || !res.logs.length) addOutputLine(linesEl, t("emptyOutput"), true);
+      if (res.capped) addOutputLine(linesEl, t("truncated"), true);
+    } else {
+      if (res.logs && res.logs.length) addOutputLine(linesEl, t("interrupted"), true);
+      addOutputLine(linesEl, res.error || t("unknownError"), false);
+    }
+  }
+
+  function showOutput(res) {
+    var panel = document.getElementById("output-panel");
+    var lines = document.getElementById("output-lines");
+    var dot = document.getElementById("output-dot");
+    var caption = document.getElementById("output-caption");
+    paintOutput(lines, res);
+    dot.classList.toggle("is-error", !res.ok);
+    caption.textContent = res.ok ? t("outputCaption") : t("runtimeError");
+    panel.classList.add("show");
+  }
+
+  /* ══════════════════ ПРОВЕРКА ══════════════════ */
+  function checkAnswers() {
+    if (!currentLevel || busy) return;
+    var lv = currentLevel;
+    var inputs = editorInputs();
+    if (!inputs.length) return;
+
+    var values = [], firstEmpty = null;
+    for (var i = 0; i < inputs.length; i++) {
+      var v = inputs[i].value.trim();
+      values.push(v);
+      inputs[i].classList.remove("wrong", "correct");
+      if (!v && !firstEmpty) firstEmpty = inputs[i];
+    }
+
+    if (firstEmpty) {
+      firstEmpty.classList.add("wrong");
+      setVerdict("bad", t("fillAll"));
+      firstEmpty.focus();
+      return;
+    }
+
+    var code = buildCode(lv.template, values);
+    setBusy(true);
+    track("check", { id: lv.id });
+
+    runCode(code, function (res) {
+      setBusy(false);
+      if (currentLevel !== lv) return;
+      document.getElementById("check-btn").textContent = t("checkBtn");
+      showOutput(res);
+      if (res.ok && sameOutput(res.logs, lv.expected)) {
+        solveLevel(lv, false);
+      } else {
+        failLevel(lv, res);
+      }
+    });
+  }
+
+  function solveLevel(lv, fromReveal) {
+    var first = !state.completed[lv.id];
+    var gain = 0;
+
+    if (first) {
+      state.completed[lv.id] = true;
+      if (!fromReveal) {
+        var clean = (state.attempts[lv.id] || 0) === 0 && (state.hints[lv.id] || 0) === 0;
+        gain = clean ? 15 : 10;
+        state.xp = (state.xp || 0) + gain;
+      }
+      saveState();
+      if (gain) toast("+" + gain + " XP");
+      track(fromReveal ? "level_revealed" : "level_solved", {
+        id: lv.id, gain: gain,
+        attempts: state.attempts[lv.id] || 0,
+        hints: state.hints[lv.id] || 0
+      });
+    }
+
+    var inputs = editorInputs();
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].readOnly = true;
+      inputs[i].classList.add("correct");
+      inputs[i].classList.remove("wrong");
+    }
+
+    if (fromReveal) {
+      setVerdict("ok", t("revealVerdict"));
+    } else if (gain) {
+      setVerdict("ok", gain === 15 ? t("correctBonus", { gain: gain }) : t("correctGain", { gain: gain }));
+    } else {
+      setVerdict("ok", t("correct"));
+    }
+
+    document.getElementById("explainer-body").innerHTML = lv.explainer;
+    document.getElementById("explainer").classList.add("show");
+
+    var checkBtn = document.getElementById("check-btn");
+    checkBtn.disabled = true;
+    checkBtn.textContent = t("doneBtn");
+
+    document.getElementById("solution-btn").hidden = true;
+    updateAttemptNote();
+    renderProgress();
+    renderHeader();
+    showNextButton();
+
+    if (allDone() && !state.finishedAt) {
+      state.finishedAt = Date.now();
+      saveState();
+    }
+  }
+
+  function failLevel(lv, res) {
+    state.attempts[lv.id] = (state.attempts[lv.id] || 0) + 1;
+    saveState();
+
+    var msg;
+    if (res.timeout) {
+      msg = t("timeoutMsg");
+    } else if (!res.ok) {
+      msg = t("runFail", { err: escHtml(res.error || t("unknownError")) });
+    } else {
+      msg = t("wrongOutput");
+    }
+    setVerdict("bad", msg);
+
+    updateAttemptNote();
+    if (state.attempts[lv.id] >= 3) document.getElementById("solution-btn").hidden = false;
+
+    track("level_failed", { id: lv.id, attempts: state.attempts[lv.id], timeout: !!res.timeout });
+
+    var first = editorInputs()[0];
+    if (first) {
+      try { first.focus({ preventScroll: true }); } catch (e) { first.focus(); }
+    }
+  }
+
+  function showHint() {
+    var lv = currentLevel;
+    if (!lv) return;
+    state.hints[lv.id] = (state.hints[lv.id] || 0) + 1;
+    saveState();
+
+    var box = document.getElementById("hint-box");
+    var html = t("hintTitle");
+    for (var i = 0; i < lv.blanks.length; i++) {
+      html += "<div>" + t("hintBlank", { n: i + 1, hint: lv.blanks[i].hint }) + "</div>";
+    }
+    box.innerHTML = html;
+    box.classList.add("show");
+    track("hint", { id: lv.id, count: state.hints[lv.id] });
+  }
+
+  function revealSolution() {
+    var lv = currentLevel;
+    if (!lv) return;
+
+    var inputs = editorInputs();
+    for (var i = 0; i < inputs.length; i++) {
+      var idx = Number(inputs[i].getAttribute("data-index"));
+      var blank = lv.blanks[idx];
+      if (blank) {
+        inputs[i].value = blank.accept[0];
+        autosize(inputs[i]);
+      }
+      inputs[i].readOnly = true;
+      inputs[i].classList.add("correct");
+      inputs[i].classList.remove("wrong");
+    }
+
+    state.revealed[lv.id] = true;
+    saveState();
+
+    var values = [];
+    for (var j = 0; j < lv.blanks.length; j++) values.push(lv.blanks[j].accept[0]);
+
+    setBusy(true);
+    runCode(buildCode(lv.template, values), function (res) {
+      setBusy(false);
+      if (currentLevel !== lv) return;
+      document.getElementById("check-btn").textContent = t("checkBtn");
+      showOutput(res);
+      solveLevel(lv, true);
+    });
+  }
+
+  function nextLevel() {
+    if (state.current >= TOTAL - 1) { showFinish(); return; }
+    state.current += 1;
+    saveState();
+    renderLevel();
+    var levelEl = document.querySelector(".level");
+    if (levelEl) {
+      try { levelEl.scrollIntoView({ behavior: "smooth", block: "start" }); } catch (e) {}
+    }
+    track("level_open", { id: LV()[state.current].id });
+  }
+
+  /* ══════════════════ НАВИГАЦИЯ ПО ИГРЕ ══════════════════ */
+  function startPlaying() {
+    if (allDone()) { showFinish(); return; }
+    if (!state.startedAt) { state.startedAt = Date.now(); saveState(); }
+    if (typeof state.current !== "number" || state.current < 0 || state.current >= TOTAL) state.current = 0;
+    var maxVisit = firstUncompleted();
+    // «Продолжить» всегда ведёт на первый непройденный уровень;
+    // вернуться к пройденному можно точками прогресса.
+    if (state.current > maxVisit || state.completed[LV()[state.current].id]) state.current = maxVisit;
+    showScreen("play");
+    renderLevel();
+    track("play_start", { level: state.current + 1 });
+  }
+
+  function fmtDuration(sec) {
+    if (!isFinite(sec) || sec < 0) sec = 0;
+    if (sec < 60) return t("secUnit", { n: sec });
+    var m = Math.round(sec / 60);
+    if (m < 60) return t("minUnit", { n: m });
+    var h = Math.floor(m / 60);
+    return t("hourUnit", { h: h, m: m % 60 });
+  }
+
+  /* ══════════════════ ФИНАЛ ══════════════════ */
+  function renderFinishStats() {
+    var sec = Math.max(0, Math.round((((state.finishedAt || Date.now()) - (state.startedAt || Date.now()))) / 1000));
+    document.getElementById("stat-time").textContent = fmtDuration(sec);
+    document.getElementById("stat-xp").textContent = String(state.xp || 0);
+
+    var hints = 0;
+    for (var h in state.hints) {
+      if (Object.prototype.hasOwnProperty.call(state.hints, h)) hints += Number(state.hints[h]) || 0;
+    }
+    document.getElementById("stat-hints").textContent = String(hints);
+
+    var levels = LV();
+    var firstTry = 0;
+    for (var i = 0; i < levels.length; i++) {
+      var lv = levels[i];
+      if (state.completed[lv.id] && !state.revealed[lv.id] && (state.attempts[lv.id] || 0) === 0) firstTry++;
+    }
+    document.getElementById("stat-accuracy").textContent = firstTry + "/" + TOTAL;
+    return { seconds: sec, hints: hints };
+  }
+
+  function showFinish() {
+    var stats = renderFinishStats();
+    showScreen("finish");
+    renderHome();
+    renderHeader();
+    track("finish", { seconds: stats.seconds, xp: state.xp || 0, hints: stats.hints });
+  }
+
+  function shareResult() {
+    var sec = Math.max(0, Math.round((((state.finishedAt || Date.now()) - (state.startedAt || Date.now()))) / 1000));
+    var text = t("shareText", { total: TOTAL, xp: state.xp || 0, time: fmtDuration(sec) });
+    var url = location.href;
+
+    if (navigator.share) {
+      navigator.share({ title: t("shareTitle"), text: text, url: url }).then(function () {
+        track("share", { via: "native" });
+      }).catch(function () {});
+      return;
+    }
+    var full = text + " " + url;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(full).then(function () {
+        toast(t("copied"));
+        track("share", { via: "clipboard" });
+      }, function () {
+        toast(full);
+      });
+    } else {
+      toast(full);
+    }
+  }
+
+  /* ══════════════════ ПЕСОЧНИЦА ══════════════════ */
+  function examples() {
+    return {
+      hello: t("exHello"),
+      table: t("exTable"),
+      array: t("exArray"),
+      object: t("exObject")
+    };
+  }
+
+  function runSandbox() {
+    var ta = document.getElementById("sandbox-code");
+    var panel = document.getElementById("sandbox-output-panel");
+    var out = document.getElementById("sandbox-output");
+    var dot = document.getElementById("sandbox-dot");
+    if (!ta || !out) return;
+    var code = ta.value;
+    if (!code.trim()) { toast(t("writeFirst")); return; }
+
+    out.innerHTML = '<div class="output-line output-line--muted">' + t("executing") + '</div>';
+    panel.style.display = "block";
+
+    runCode(code, function (res) {
+      paintOutput(out, res);
+      dot.classList.toggle("is-error", !res.ok);
+      track("sandbox_run", { ok: !!res.ok });
+    });
+  }
+
+  /* ══════════════════ БЫСТРЫЕ СИМВОЛЫ ══════════════════ */
+  function insertSymbol(sym) {
+    var el = document.activeElement;
+    if (!el || !el.classList || !el.classList.contains("blank")) {
+      var first = editorInputs()[0];
+      if (!first) return;
+      first.focus();
+      el = first;
+    }
+    if (el.readOnly) return;
+
+    var start = el.selectionStart, end = el.selectionEnd;
+    if (typeof start !== "number") { start = el.value.length; end = start; }
+    el.value = el.value.slice(0, start) + sym + el.value.slice(end);
+    var pos = start + sym.length;
+    try { el.setSelectionRange(pos, pos); } catch (e) {}
+    el.classList.remove("wrong", "correct");
+    autosize(el);
+    track("symbol", { sym: sym });
+  }
+
+  /* ══════════════════ СБРОС ══════════════════ */
+  function resetProgress() {
+    if (!window.confirm(t("resetConfirm"))) return;
+    state.completed = {};
+    state.current = 0;
+    state.xp = 0;
+    state.hints = {};
+    state.attempts = {};
+    state.revealed = {};
+    state.startedAt = null;
+    state.finishedAt = null;
+    saveState();
+    renderLevel();
+    renderHome();
+    renderHeader();
+    toast(t("resetDone"));
+    track("reset");
+  }
+
+  /* ══════════════════ ИНИЦИАЛИЗАЦИЯ ══════════════════ */
+  loadState();
+  touchStreak();
+
+  applyStatic();
+  applyMeta();
+  syncLangButtons();
+
+  var savedTheme = "light";
+  try { savedTheme = localStorage.getItem(THEME_KEY) || document.documentElement.getAttribute("data-theme") || "light"; } catch (e) {}
+  applyTheme(savedTheme === "dark" ? "dark" : "light", false);
+
+  sandboxDefault = t("sandboxDefault");
+  var sandboxTa = document.getElementById("sandbox-code");
+  if (sandboxTa) sandboxTa.value = sandboxDefault;
+
+  if (typeof state.current !== "number" || state.current < 0 || state.current >= TOTAL) state.current = 0;
+  var maxVisitInit = firstUncompleted();
+  if (state.current > maxVisitInit) state.current = maxVisitInit;
+
+  renderHome();
+  renderLevel();
+
+  /* Кнопки шапки */
+  document.getElementById("brand-btn").onclick = function () { showScreen("home"); renderHome(); };
+  document.getElementById("play-btn").onclick = function () {
+    if (allDone()) showFinish();
+    else if (completedCount() > 0) startPlaying();
+    else showScreen("intro");
+  };
+  document.getElementById("reset-btn").onclick = resetProgress;
+  document.getElementById("theme-btn").onclick = function () {
+    var next = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+    applyTheme(next);
+    track("theme", { theme: next });
+  };
+
+  /* Переключатель языка */
+  var langSwitch = document.getElementById("lang-switch");
+  if (langSwitch) {
+    langSwitch.addEventListener("click", function (ev) {
+      var tgt = ev.target;
+      while (tgt && tgt !== langSwitch && !(tgt.classList && tgt.classList.contains("lang__btn"))) {
+        tgt = tgt.parentNode;
+      }
+      if (!tgt || tgt === langSwitch) return;
+      setLang(tgt.getAttribute("data-lang"), true);
+    });
+  }
+
+  /* Главная */
+  document.getElementById("start-btn").onclick = function () { showScreen("intro"); track("open_intro"); };
+  document.getElementById("sandbox-btn").onclick = function () { showScreen("sandbox"); track("open_sandbox"); };
+
+  /* Интро */
+  document.getElementById("intro-start-btn").onclick = startPlaying;
+  document.getElementById("intro-sandbox-btn").onclick = function () { showScreen("sandbox"); };
+  document.getElementById("intro-home-btn").onclick = function () { showScreen("home"); };
+
+  /* Игра */
+  document.getElementById("check-btn").onclick = checkAnswers;
+  document.getElementById("hint-btn").onclick = showHint;
+  document.getElementById("solution-btn").onclick = revealSolution;
+
+  /* Песочница */
+  document.getElementById("run-sandbox-btn").onclick = runSandbox;
+  document.getElementById("clear-sandbox-btn").onclick = function () {
+    document.getElementById("sandbox-code").value = "";
+    document.getElementById("sandbox-output-panel").style.display = "none";
+    document.getElementById("sandbox-code").focus();
+  };
+  document.getElementById("sandbox-home-btn").onclick = function () { showScreen("home"); renderHome(); };
+
+  var exampleBtns = document.querySelectorAll(".example");
+  for (var e = 0; e < exampleBtns.length; e++) {
+    (function (btn) {
+      btn.onclick = function () {
+        var key = btn.getAttribute("data-example");
+        var ta = document.getElementById("sandbox-code");
+        var EX = examples();
+        if (EX[key] && ta) {
+          ta.value = EX[key];
+          runSandbox();
+        }
+      };
+    })(exampleBtns[e]);
+  }
+
+  /* Финал */
+  document.getElementById("share-btn").onclick = shareResult;
+  document.getElementById("finish-sandbox-btn").onclick = function () { showScreen("sandbox"); };
+  document.getElementById("finish-again-btn").onclick = function () {
+    state.completed = {};
+    state.current = 0;
+    state.xp = 0;
+    state.hints = {};
+    state.attempts = {};
+    state.revealed = {};
+    state.startedAt = Date.now();
+    state.finishedAt = null;
+    saveState();
+    showScreen("play");
+    renderLevel();
+    track("restart");
+  };
+
+  /* Символы: pointerdown с preventDefault, чтобы не убегала клавиатура */
+  var symBar = document.getElementById("sym-bar");
+  symBar.addEventListener("pointerdown", function (ev) {
+    if (ev.target && ev.target.classList && ev.target.classList.contains("sym")) ev.preventDefault();
+  });
+  symBar.addEventListener("click", function (ev) {
+    var tgt = ev.target;
+    if (tgt && tgt.classList && tgt.classList.contains("sym")) insertSymbol(tgt.getAttribute("data-sym") || "");
+  });
+
+  /* Конфиденциальность — делегирование, т.к. ссылка перерисовывается при смене языка */
+  document.addEventListener("click", function (ev) {
+    var tgt = ev.target;
+    while (tgt && tgt !== document && !(tgt.id === "privacy-link")) tgt = tgt.parentNode;
+    if (tgt && tgt.id === "privacy-link") {
+      ev.preventDefault();
+      toast(t("privacyToast"));
+    }
+  });
+
+  /* Горячие клавиши */
+  document.addEventListener("keydown", function (ev) {
+    if ((ev.ctrlKey || ev.metaKey) && ev.key === "Enter") {
+      ev.preventDefault();
+      if (currentScreen === "play") checkAnswers();
+      else if (currentScreen === "sandbox") runSandbox();
+    }
+    if (ev.key === "Escape") {
+      var hint = document.getElementById("hint-box");
+      if (hint && hint.classList.contains("show")) hint.classList.remove("show");
+    }
+  });
+
+  /* PWA: регистрируем только на http(s), с file:// молча пропускаем */
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener("load", function () {
+      navigator.serviceWorker.register("sw.js").catch(function () {});
+    });
+  }
+
+  track("app_ready", { levels: TOTAL, screen: currentScreen, lang: lang });
+})();
+</script>
+</body>
+</html>
